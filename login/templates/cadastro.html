@@ -1,0 +1,80 @@
+{% extends 'baseAuth.html' %}
+
+{% block head %}
+   <title>SysTimer - Cadastro</title>
+{% endblock %}
+
+{% block conteudo %}
+<div class="container mx-auto h-screen flex flex-col md:flex-row">
+    <!-- Bloco vermelho ocupando 50% da tela -->
+    <div class="w-full md:w-1/2 h-full flex items-center justify-center">
+        <div class="bg-blue-500 rounded-xl w-5/6 h-5/6">
+            <h2>SysTimer</h2>
+        </div>
+    </div>
+    
+    <!-- Bloco verde ocupando 50% da tela -->
+    <div class="w-full md:w-1/2 h-full flex items-center justify-center">
+        <div class="w-full flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+
+          
+            <div class="mt-10 max-w-xl">
+                <div class="">
+                    <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Cadastre-se</h2>
+                    <h2 class="text-base/7 font-semibold text-gray-900">Informação Pessoal</h2>
+                    <p class="mt-1 text-sm/6 text-gray-600">Use um endereço onde você possa receber correspondências.</p>
+              
+                </div>
+                <form class="space-y-6 max-w-xl mx-auto" action="{% url 'validar_cadastro' %}" method="POST">
+                    <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">                        <div>
+                            <label for="first-name" class="block text-sm font-medium text-gray-900">Nome</label>
+                            <div class="mt-2">
+                                <input type="text" name="first-name" id="first-name" autocomplete="given-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm">
+                            </div>
+                        </div>
+                
+                        <!-- Sobrenome -->
+                        <div>
+                            <label for="last-name" class="block text-sm font-medium text-gray-900">Sobrenome</label>
+                            <div class="mt-2">
+                                <input type="text" name="last-name" id="last-name" autocomplete="family-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm">
+                            </div>
+                        </div>
+                
+                        <!-- Empresa -->
+                        <div>
+                            <label for="company" class="block text-sm font-medium text-gray-900">Empresa</label>
+                            <div class="mt-2">
+                                <input id="company" name="company" type="text" autocomplete="organization" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm">
+                            </div>
+                        </div>
+                
+                        <!-- E-mail -->
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-900">E-mail</label>
+                            <div class="mt-2">
+                                <input type="email" name="email" id="email" autocomplete="email" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm">
+                            </div>
+                        </div>
+                
+                        <!-- Senha -->
+                        <div class="sm:col-span-2">
+                            <label for="password" class="block text-sm font-medium text-gray-900">Senha</label>
+                            <div class="mt-2">
+                                <input type="password" name="password" id="password" autocomplete="new-password" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm">
+                            </div>
+                        </div>
+                    </div>
+                
+                    <!-- Botão -->
+                    <div>
+                        <button type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Concluir</button>
+                    </div>
+                </form>
+                
+        
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
