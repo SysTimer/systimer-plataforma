@@ -1,8 +1,9 @@
 from pathlib import Path
 import os
-from decouple import config
+from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv()
 
 
 SECRET_KEY = 'django-insecure-)o62#v++_ole3f+wbdp-v=_m8u=zbqyv3olyepfu_htv(k4yh7'
@@ -25,8 +26,6 @@ INSTALLED_APPS = [
     'tailwind',
     'theme',
     'django_browser_reload'
-
-    
 ]
 TAILWIND_APP_NAME = 'theme'
 INTERNAL_IPS = [
@@ -66,16 +65,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'enginer.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': config('MYSQL_DB_NAME'),
-        'USER': config('MYSQL_USER'),
-        'PASSWORD': config('MYSQL_PASSWORD'),
-        'HOST': config('MYSQL_HOST', default='localhost'),
-        'PORT': config('MYSQL_PORT', default='3306'),
-    }
-}
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -92,16 +82,27 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LANGUAGE_CODE = 'pt-br'
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.getenv('MYSQL_DB_NAME'),
+        'USER': os.getenv('MYSQL_USER'),
+        'PASSWORD': os.getenv('MYSQL_PASSWORD'),
+        'HOST': os.getenv('MYSQL_HOST', default='localhost'),
+        'PORT': os.getenv('MYSQL_PORT', default='3306'),
+    }
+}
 
+LANGUAGE_CODE = 'pt-br'
 TIME_ZONE = 'America/Sao_Paulo'
 
 USE_I18N = True
-
 USE_TZ = True
 
 
-STATIC_URL = 'static/'
-STATICFILES_URL = [(os.path.join(BASE_DIR, 'templates/static/'))]
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'templates', 'static'),
+]
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 NPM_BIN_PATH = 'C:/Program Files/nodejs/npm.cmd'
