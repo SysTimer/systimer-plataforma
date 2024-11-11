@@ -1,0 +1,51 @@
+{% extends 'baseAuth.html' %}
+{% load static %}
+
+{% block head %}
+   <title>SysTimer - Login</title>
+{% endblock %}
+
+{% block conteudo %}
+<div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+    <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+      <div class="h-[60px] flex justify-center items-center">
+        <img src="{% static 'img/clock-hour-2.svg' %}" alt="Minha Imagem" class="text-blue-500">
+        <p class="ml-3 text-2xl font-bold">SysTimer</p>
+      </div>
+      <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Recuperar Senha de Acesso</h2>
+    </div>
+  
+    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+    <form class="space-y-6" action="{% url 'validar_token' %}?token={{request.GET.token}}" method="POST">
+      {% csrf_token %}
+        <div>
+          <label for="email" class="block text-sm/6 font-medium text-gray-900">Nova Senha</label>
+          <div class="mt-2">
+            <input id="senha" name="senha" type="password" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm/6">
+          </div>
+        </div>
+  
+        <div>
+          <div class="flex items-center justify-between">
+            <label for="password" class="block text-sm/6 font-medium text-gray-900">Confirmação Nova Senha</label>
+          </div>
+          <div class="mt-2">
+            <input id="password_novaSenha" name="password" type="password" autocomplete="current-password" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm/6">
+          </div>
+        </div>
+
+        <div id="senhaErr">
+        </div>
+  
+        <div>
+          <button type="submit" class="flex w-full justify-center rounded-md bg-blue-500 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500">Mudar Senha</button>
+        </div>
+      </form>
+  
+      <p class="mt-10 text-center text-sm/6 text-gray-500">
+        <a href="{% url 'login' %}" class="font-semibold text-blue-500 hover:text-indigo-500">Voltar a tela de login</a>
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

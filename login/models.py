@@ -30,7 +30,8 @@ class Pessoa(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['PES_NOME', 'PES_SOBRENOME'] 
     objects = PessoaManager()
 
-
+    def get_by_natural_key(self):
+        return self
     
     class Meta:
         db_table = 'Pessoa' 
@@ -46,3 +47,13 @@ class Empresa(models.Model):
 
     class Meta:
         db_table = 'Empresa' 
+
+class PessoaToken(models.Model):
+    PST_COD = models.AutoField(primary_key=True)
+    PES_COD = models.ForeignKey('Pessoa', on_delete=models.CASCADE)
+    PST_TOKEN = models.CharField(max_length=80, unique=True)  
+    PST_DATA_EXPIRACAO = models.DateTimeField()
+    PST_EXPIRADO = models.CharField(max_length=1, default='N')
+    
+    class Meta:
+        db_table = 'Pessoa_Token' 

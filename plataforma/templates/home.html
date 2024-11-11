@@ -5,7 +5,11 @@
 {% endblock %}
 
 {% block conteudo %}
-    <h1 class="font-bold text-2xl">Olá, Renê  👋</h1>
+    <h1 class="font-bold text-2xl">Olá,  
+        {% if user.is_authenticated%}
+            {{user}}
+        {% endif %}
+        👋</h1>
     <p class="text-slate-400">Gerencie atualizações, atividades e eventos com facilidade.</p>
     <div class="mt-10 grid grid-rows-1 lg:grid-flow-col gap-10 lg:gap-0">
         <div class="flex border-2 rounded xl:w-[95%] xl:gap-10 lg:p-3 lg:w-[300px] w-full p-6 justify-between">

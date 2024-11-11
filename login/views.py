@@ -2,10 +2,17 @@ from django.shortcuts import render, redirect
 from django.contrib import messages, auth
 from django.contrib.messages import constants
 from django.views.decorators.csrf import csrf_exempt
-from .models import Pessoa, Empresa
-import bcrypt
+from .models import Pessoa, Empresa, PessoaToken
 from django.db import transaction
-from django.contrib.auth import get_user_model, authenticate
+from django.contrib.auth import get_user_model
+from django.contrib.auth.hashers import make_password
+import secrets
+
+from django.http import HttpResponse
+from django.utils import timezone
+
+from datetime import datetime, timedelta
+
 User = get_user_model()
 
 def login(request):
@@ -33,15 +40,6 @@ def validar_login(request):
     
     return redirect('/auth/login')
 
-    # usuario = auth.authenticate(request, username=pes_email, password=pes_senha)
-    # print(usuario)
-    # if usuario is None:
-    #     messages.add_message(request, constants.WARNING, 'Email ou senha inválidos')
-    #     return redirect('/auth/login')
-    
-   
-    # return redirect('/plataforma')
-    
 def validar_cadastro(request):  
     pes_nome = request.POST['pes_nome']
     pes_sobrenome = request.POST['pes_sobrenome']
@@ -68,7 +66,7 @@ def validar_cadastro(request):
     #     return redirect('/auth/cadastro')
     
     try:
-        senha_codificada = bcrypt.hashpw( pes_senha.encode('UTF-8'), bcrypt.gensalt())
+        senha_codificada = make_password(pes_senha)
         print('Senha - > ', senha_codificada.decode('UTF-8'))
         
         with transaction.atomic():
@@ -84,7 +82,7 @@ def validar_cadastro(request):
         with transaction.atomic():
             empresa = Empresa(
                 EMP_NOME=emp_nome, 
-                PES_COD=usuario  # Relacionamento com o usuário criado
+                PES_COD=usuario 
             )
             empresa.save()
             print('Empresa salva com sucesso!')
@@ -96,3 +94,50 @@ def validar_cadastro(request):
         print(e)
         return redirect('/auth/cadastro')
 
+def recuperar_senha(request):    
+    return render(request, 'recuperar_senha.html')
+
+def validar_token(request):
+    print('CAIU AQUI')
+    print(request.GET)
+    token = request.GET.get('token')
+    senha = request.POST.get('senha')
+    
+    print('Info> ', token, senha)
+
+    token_usuario = PessoaToken.objects.filter(PST_TOKEN=token, PST_EXPIRADO = 'N')
+    
+    if token_usuario.exists():
+        token_instance = token_usuario[0]
+        data_atual = timezone.now()
+        print('token existe')
+        # Acessando o ID da pessoa associada ao token
+        if token_instance.PST_DATA_EXPIRACAO >= data_atual:
+            print('Pasosu aqui')
+            pessoa_tk = token_usuario.first()
+            pessoa_senha = Pessoa.objects.filter(PES_COD= token_instance.PES_COD_id).first()
+            pessoa_senha.password = make_password(senha)
+            token_instance.PST_EXPIRADO = 'S'
+            pessoa_senha.save()
+            token_instance.save()
+            return redirect('login')
+        else:
+            return redirect('login')   
+    return HttpResponse('Falha na comunicação')
+
+
+def recuperar_acesso(request):
+    email = request.POST.get('recuperar_email')
+    usuario = Pessoa.objects.filter(PES_EMAIL = email)
+    
+    if usuario.exists():
+        usuario_instancia = usuario[0]
+        token = secrets.token_hex(2)
+        data_expiracao = datetime.now() + timedelta(minutes=15)
+        pessoa_token = PessoaToken(PES_COD = usuario_instancia, PST_TOKEN = token, PST_DATA_EXPIRACAO = data_expiracao)
+        pessoa_token.save()
+        messages.add_message(request, constants.SUCCESS, 'Verifique sua caixa de entrada no e-mail')
+        return redirect('/auth/login')
+        
+        
+    return redirect('/auth/login')
