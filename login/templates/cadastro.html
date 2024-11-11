@@ -11,7 +11,7 @@
         <div class="bg-blue-500 rounded-xl w-5/6 h-5/6">
             <h2>SysTimer</h2>
         </div>
-    </div>tu
+    </div>
     
     <!-- Bloco verde ocupando 50% da tela -->
     <div class="w-full md:w-1/2 h-full flex items-center justify-center">
@@ -26,10 +26,11 @@
               
                 </div>
                 <form class="space-y-6 max-w-xl mx-auto" action="{% url 'validar_cadastro' %}" method="POST">
+                {% csrf_token %}
                     <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">                        <div>
                             <label for="first-name" class="block text-sm font-medium text-gray-900">Nome</label>
                             <div class="mt-2">
-                                <input type="text" name="first-name" id="first-name" autocomplete="given-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm">
+                                <input  type="text" name="pes_nome" id="pes_nome" autocomplete="family-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400   sm:text-sm">
                             </div>
                         </div>
                 
@@ -37,7 +38,7 @@
                         <div>
                             <label for="last-name" class="block text-sm font-medium text-gray-900">Sobrenome</label>
                             <div class="mt-2">
-                                <input type="text" name="last-name" id="last-name" autocomplete="family-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm">
+                                <input  type="text" name="pes_sobrenome" id="pes_sobrenome" autocomplete="family-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm">
                             </div>
                         </div>
                 
@@ -45,7 +46,7 @@
                         <div>
                             <label for="company" class="block text-sm font-medium text-gray-900">Empresa</label>
                             <div class="mt-2">
-                                <input id="company" name="company" type="text" autocomplete="organization" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm">
+                                <input id="emp_nome" name="emp_nome" type="text" autocomplete="organization" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm">
                             </div>
                         </div>
                 
@@ -53,7 +54,7 @@
                         <div>
                             <label for="email" class="block text-sm font-medium text-gray-900">E-mail</label>
                             <div class="mt-2">
-                                <input type="email" name="email" id="email" autocomplete="email" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm">
+                                <input type="email" name="pes_email" id="pes_email" autocomplete="email" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm">
                             </div>
                         </div>
                 
@@ -61,7 +62,7 @@
                         <div class="sm:col-span-2">
                             <label for="password" class="block text-sm font-medium text-gray-900">Senha</label>
                             <div class="mt-2">
-                                <input type="password" name="password" id="password" autocomplete="new-password" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm">
+                                <input type="password" name="pes_senha" id="pes_senha" autocomplete="new-password" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm">
                             </div>
                         </div>
                     </div>

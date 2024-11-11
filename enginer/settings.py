@@ -3,7 +3,8 @@ import os
 from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv()
+load_dotenv(BASE_DIR / '.env')
+
 
 
 SECRET_KEY = 'django-insecure-)o62#v++_ole3f+wbdp-v=_m8u=zbqyv3olyepfu_htv(k4yh7'
@@ -12,7 +13,13 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+PASSWORD_HASHERS = [
+    "django.contrib.auth.hashers.BCryptSHA256PasswordHasher",
+    "django.contrib.auth.hashers.PBKDF2PasswordHasher",
+    "django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher",
+    "django.contrib.auth.hashers.Argon2PasswordHasher",
+    "django.contrib.auth.hashers.ScryptPasswordHasher",
+]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -98,6 +105,9 @@ TIME_ZONE = 'America/Sao_Paulo'
 
 USE_I18N = True
 USE_TZ = True
+
+
+AUTH_USER_MODEL = 'login.Pessoa'
 
 
 STATIC_URL = '/static/'
