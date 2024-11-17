@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin,BaseUserManager
 
@@ -31,7 +32,7 @@ class Pessoa(AbstractBaseUser, PermissionsMixin):
     objects = PessoaManager()
 
     def get_by_natural_key(self):
-        return self
+        return {'pes_cod': self.PES_COD, 'pes_nome': self.PES_NOME, 'pes_email': self.PES_EMAIL}
     
     class Meta:
         db_table = 'Pessoa' 
@@ -57,3 +58,13 @@ class PessoaToken(models.Model):
     
     class Meta:
         db_table = 'Pessoa_Token' 
+
+
+class LoginAuditoria(models.Model):
+      la_cod = models.AutoField(primary_key=True)
+      la_data_ultima = models.DateTimeField()
+      pes_cod = models.ForeignKey(Pessoa, on_delete=models.CASCADE)
+      emp_cod = models.ForeignKey(Empresa, on_delete=models.CASCADE)
+      
+      class Meta:
+        db_table=  'Login_Auditoria'

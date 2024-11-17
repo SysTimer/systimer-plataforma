@@ -102,9 +102,9 @@ DATABASES = {
 
 LANGUAGE_CODE = 'pt-br'
 TIME_ZONE = 'America/Sao_Paulo'
+USE_TZ = False 
 
 USE_I18N = True
-USE_TZ = True
 
 
 AUTH_USER_MODEL = 'login.Pessoa'
@@ -113,6 +113,11 @@ AUTH_USER_MODEL = 'login.Pessoa'
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'templates', 'static'),
+    os.path.join(BASE_DIR, 'theme', 'static_src', 'node_modules', 'flowbite', 'dist')
 ]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 NPM_BIN_PATH = 'C:/Program Files/nodejs/npm.cmd'
+
+
+# Teste Renê 15-11-2024

@@ -1,0 +1,100 @@
+{% load static %} 
+{% load static tailwind_tags %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    {% tailwind_css %}
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+
+    {% block titulo %}
+    <title>SysTimer - Empresas</title>
+    {% endblock %}
+  </head>
+
+  <body class="bg-slate-200">
+    <div>
+      <main class=" h-screen flex items-center justify-center">
+      <div class="">
+        <div class="h-1/3 mb-[50px]	flex justify-center items-center">
+          <img
+            src="{% static 'img/clock-hour-2.svg' %}"
+            alt="Minha Imagem"
+            class="text-blue-500"
+          />
+          <p class="ml-3 text-2xl font-bold">SysTimer</p>
+        </div>
+        <div
+          class="w-full max-w-lg p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 dark:bg-gray-800 dark:border-gray-700"
+        >
+          <h5
+            class="mb-3 text-base font-semibold text-gray-900 md:text-xl dark:text-white"
+          >
+            Olá, {% if user.is_authenticated%} {{user.PES_NOME}} {% endif %}
+          </h5>
+          <p class="text-sm font-normal text-gray-500 dark:text-gray-400">
+            Escolha um dos sistemas disponíveis abaixo para começar a gerenciar
+            suas atividades
+          </p>
+          <ul class="my-4 space-y-3">
+            {% for empresa in empresas %}
+            <li>
+              <form action="{% url 'selecionar_empresa' %}"  method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="emp_cod" value="{{ empresa.emp_cod }}" />
+                <input type="hidden" name="cargo_nome" value="{{ empresa.cargo_nome }}" />
+                <a
+                 onclick="submitForm(this)"
+                  href=""
+                  class="flex items-center p-3 text-base font-bold text-gray-900 rounded-lg bg-gray-50 hover:bg-gray-100 group hover:shadow dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white"
+                >
+                <i class="fa-solid fa-house-user"></i>
+                  <span class="flex-1 ms-3 whitespace-nowrap">{{ empresa.emp_nome }}</span>
+                  {% if empresa.UltimoAcesso %}
+
+                  <span class="bg-blue-100 text-blue-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400">
+                    <svg class="w-2.5 h-2.5 me-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z"/>
+                    </svg>
+                    {{ empresa.UltimoAcesso}} atrás 
+                    </span> 
+                  {% elif empresa.Dono == 1 %}
+
+                  {% endif %}
+                </a>
+              </form>
+            </li>
+            {% endfor %}
+          </ul>
+          <div>
+            <a
+              href="#"
+              class="inline-flex items-center text-xs font-normal text-gray-500 hover:underline dark:text-gray-400"
+            >
+              <svg
+                class="w-3 h-3 me-2"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M7.529 7.988a2.502 2.502 0 0 1 5 .191A2.441 2.441 0 0 1 10 10.582V12m-.01 3.008H10M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                />
+              </svg>
+              Não está aparecendo o sistema que eu quero
+            </a>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script src="{% static 'js/empresa.js' %}"></script>
+  </body>
+</html>

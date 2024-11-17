@@ -83,3 +83,19 @@ class Horas(models.Model):
 
     class Meta:
         db_table = 'Horas' 
+
+
+class EmpresaPessoaView(models.Model):
+    pes_cod = models.IntegerField(primary_key=True) 
+    pes_nome = models.CharField(max_length=150)
+    emp_nome = models.CharField(max_length=150)
+    emp_cod = models.IntegerField() 
+    cargo_nome = models.CharField(max_length=150)
+    Dono = models.IntegerField() 
+    UltimoAcesso = models.CharField(max_length=150)
+
+    class Meta():
+        db_table = "EMPRESA_PESSOA_VI"
+        managed = False
+        
+    
