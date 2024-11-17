@@ -7,7 +7,7 @@
 {% block conteudo %}
     <h1 class="font-bold text-2xl">Olá,  
         {% if user.is_authenticated%}
-            {{user}}
+            {{user.PES_NOME}}
         {% endif %}
         👋</h1>
     <p class="text-slate-400">Gerencie atualizações, atividades e eventos com facilidade.</p>
