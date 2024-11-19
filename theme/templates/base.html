@@ -1,5 +1,5 @@
-{% load static %}
 {% load static tailwind_tags %}
+{% load static %}
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -19,21 +19,21 @@
   {% endblock %}
 </head>
 
-<body>
+<body class="p-0">
   <div class="h-screen" >
 
-    <div class="flex">
+    <div class="flex h-screen">
 
-      <aside id="sidebar" class="block md:hidden lg:block h-screen w-[300px]">
-        <div class="h-full flex flex-col bg-custom-gray px-3 py-4 overflow-y-auto">
+      <aside id="sidebar" class="block md:hidden lg:block h-screen w-[280px]">
+        <div class="h-screen flex flex-col bg-custom-gray px-3 py-4 overflow-y-auto">
           <div>
                       <!-- Conteúdo do aside -->
-          <div class="h-[60px] flex justify items-center">
-            <img src="{% static 'img/clock-hour-2.svg' %}" alt="Minha Imagem" class="text-blue-500">
-            <p class="ml-3 text-2xl font-bold">SysTimer</p>
-            <button id="btnFecha" class="">
-              <i class="fa-solid fa-xmark"></i>
-            </button>
+          <div class="h-[58px] flex justify-between items-center">
+            <div class="flex items-center">
+              <img src="{% static 'img/clock-hour-2.svg' %}" alt="Minha Imagem" class="text-blue-500">
+              <p class="ml-3 text-2xl font-bold">SysTimer</p>
+            </div>
+
           </div>
           <div class="mt-[30px]">
             <ul class="space-y-2 font-medium">
@@ -44,13 +44,13 @@
 
                 <a href="#"
                   class="flex items-center p-2 rounded-lg text-white hover:bg-white hover:border hover:border-slate-200 hover:border-[2px] group">
-                  <i class="fa-solid fa-home text-sm font-bold text-slate-400 group-hover:text-blue-600"></i>
-                  <span class="ms-3 text-sm text-text-principal">Dashboard</span>
+                  <i class="fa-solid fa-home text-[13px]	 font-bold text-slate-400 group-hover:text-blue-600"></i>
+                  <span class="ms-3 text-[13px]	 text-text-principal">Dashboard</span>
                 </a>
                 <a href="#"
                   class="relative flex items-center  p-2 rounded-lg text-white hover:bg-white hover:border hover:border-slate-200 hover:border-[2px] group">
-                  <i class="fa-solid fa-inbox text-sm font-bold text-slate-400 group-hover:text-blue-600"></i>
-                  <span class="ms-3 text-sm text-text-principal">Caixa de Entrada</span>
+                  <i class="fa-solid fa-inbox text-[13px] font-bold text-slate-400 group-hover:text-blue-600"></i>
+                  <span class="ms-3 text-[13px] text-text-principal">Caixa de Entrada</span>
                   <div
                     class="absolute flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full left-4 -top-1 -end-2 dark:border-gray-900">
                     1</div>
@@ -58,28 +58,28 @@
 
                 <a href="#"
                   class="flex items-center p-2 rounded-lg text-white hover:bg-white hover:border hover:border-slate-200 hover:border-[2px] group">
-                  <i class="fa-solid fa-rectangle-list text-sm font-bold text-slate-400 group-hover:text-blue-600"></i>
-                  <span class="ms-3 text-sm text-text-principal">Kanban Board</span>
+                  <i class="fa-solid fa-rectangle-list text-[13px] font-bold text-slate-400 group-hover:text-blue-600"></i>
+                  <span class="ms-3 text-[13px] text-text-principal">Kanban Board</span>
                 </a>
                 <hr>
                 <span class="text-xs	 text-text-principal">Gerenciar</span>
 
                 <a href="#"
                   class="flex items-center p-2 rounded-lg text-white hover:bg-white hover:border hover:border-slate-200 hover:border-[2px] group">
-                  <i class="fa-solid fa-list-check text-sm font-bold text-slate-400 group-hover:text-blue-600"></i>
-                  <span class="ms-3 text-sm text-text-principal">Tarefas</span>
+                  <i class="fa-solid fa-list-check text-[13px] font-bold text-slate-400 group-hover:text-blue-600"></i>
+                  <span class="ms-3 text-[13px] text-text-principal">Tarefas</span>
                 </a>
 
                 <a href="#"
                   class="flex items-center p-2 rounded-lg text-white hover:bg-white hover:border hover:border-slate-200 hover:border-[2px] group">
-                  <i class="fa-solid fa-folder text-sm font-bold text-slate-400 group-hover:text-blue-600"></i>
-                  <span class="ms-3 text-sm text-text-principal">Projetos</span>
+                  <i class="fa-solid fa-folder text-[13px] font-bold text-slate-400 group-hover:text-blue-600"></i>
+                  <span class="ms-3 text-[13px] text-text-principal">Projetos</span>
                 </a>
 
                 <a href="#"
                   class="flex items-center p-2 rounded-lg text-white hover:bg-white hover:border hover:border-slate-200 hover:border-[2px] group">
-                  <i class="fa-solid fa-user-plus text-sm font-bold text-slate-400 group-hover:text-blue-600"></i>
-                  <span class="ms-3 text-sm text-text-principal">Equipe</span>
+                  <i class="fa-solid fa-user-plus text-[13px] font-bold text-slate-400 group-hover:text-blue-600"></i>
+                  <span class="ms-3 text-[13px] text-text-principal">Equipe</span>
                 </a>
 
 
@@ -93,7 +93,7 @@
                 class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-blue-500 bg-blue-100 rounded-lg dark:bg-blue-800 dark:text-blue-200">
                 <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-home"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12.707 2.293l9 9c.63 .63 .184 1.707 -.707 1.707h-1v6a3 3 0 0 1 -3 3h-1v-7a3 3 0 0 0 -2.824 -2.995l-.176 -.005h-2a3 3 0 0 0 -3 3v7h-1a3 3 0 0 1 -3 -3v-6h-1c-.89 0 -1.337 -1.077 -.707 -1.707l9 -9a1 1 0 0 1 1.414 0m.293 11.707a1 1 0 0 1 1 1v7h-4v-7a1 1 0 0 1 .883 -.993l.117 -.007z" /></svg>  
               </div>
-              <div class="ms-3 text-sm font-bold">{{ empresa.EMP_NOME }}</div>
+              <div class="ms-3 text-[13px] font-bold">{{ empresa.EMP_NOME }}</div>
   
               <button type="button" id="deleteButton" data-modal-target="deleteModal" data-modal-toggle="deleteModal"
                 class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700">
@@ -111,7 +111,7 @@
   <div class="relative p-4 w-full max-w-md h-full md:h-auto">
       <!-- Modal content -->
       <div class="relative p-4 text-center bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
-          <button type="button" class="text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="deleteModal">
+          <button type="button" class="text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-[13px] p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="deleteModal">
               <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
               <span class="sr-only">Close modal</span>
           </button>
@@ -120,11 +120,11 @@
 
           <p class="mb-4 text-gray-500 dark:text-gray-300">Realmente deseja trocar de Empresa?</p>
           <div class="flex justify-center items-center space-x-4">
-              <button data-modal-toggle="deleteModal" type="button" class="py-2 px-3 text-sm font-medium text-gray-500 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
+              <button data-modal-toggle="deleteModal" type="button" class="py-2 px-3 text-[13px] font-medium text-gray-500 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
                 Não, cancelar
 
               </button>
-              <a href="/plataforma" class="py-2 px-3 text-sm font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-900">
+              <a href="/plataforma" class="py-2 px-3 text-[13px] font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-900">
                 Sim, tenho certeza
 
               </a>
@@ -181,7 +181,7 @@
                   <div class="relative ml-3">
                     <div>
                       <button id="foto_perfil" type="button"
-                        class="relative flex rounded-full bg-blue-600 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                        class="relative flex rounded-full bg-blue-600 text-[13px] focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                         id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                         <img class="h-8 w-8 rounded-full"
                           src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
@@ -192,11 +192,11 @@
                       class="hidden absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
                       role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
                       <!-- Active: "bg-gray-100 outline-none", Not Active: "" -->
-                      <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
+                      <a href="#" class="block px-4 py-2 text-[13px] text-gray-700" role="menuitem" tabindex="-1"
                         id="user-menu-item-0">Meu Perfil</a>
-                      <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
+                      <a href="#" class="block px-4 py-2 text-[13px] text-gray-700" role="menuitem" tabindex="-1"
                         id="user-menu-item-1">Configurações</a>
-                      <a href="{% url 'sair' %}" class="block px-4 py-2 text-sm text-gray-700" role="menuitem"
+                      <a href="{% url 'sair' %}" class="block px-4 py-2 text-[13px] text-gray-700" role="menuitem"
                         tabindex="-1" id="user-menu-item-2">Sair</a>
                     </div>
                   </div>
@@ -208,7 +208,7 @@
         </div>
 
 
-        <div id="conteudo" class="p-10">
+        <div id="conteudo" class="">
 
           {% block conteudo %}
           {% endblock %}
@@ -217,6 +217,7 @@
       </main>
     </div>
   </div>
+  <script>
   <script src="{% static 'js/base.js'%}"></script>
   <script src="{% static 'flowbite.min.js' %}"></script>
 

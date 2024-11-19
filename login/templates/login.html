@@ -1,23 +1,40 @@
 {% extends 'baseAuth.html' %}
+{% load static %} 
 
 {% block head %}
    <title>SysTimer - Login</title>
 {% endblock %}
 
 {% block conteudo %}
-<div class="container mx-auto h-screen flex flex-col md:flex-row">
-    <!-- Bloco vermelho ocupando 50% da tela -->
+<div class="container mx-auto  h-screen flex flex-col md:flex-row">
     <div class="w-full md:w-1/2 h-full flex items-center justify-center">
-        <div class="bg-blue-500 rounded-xl w-5/6 h-5/6">
-            <h2>SysTimer</h2>
+        <div class="bg-blue-500 rounded-xl w-5/6 h-5/6 block lg:block sm:hidden">
+            <div class=" text-white h-full flex flex-col items-center justify-center">
+                <div class="mb-10 w-[500px]">
+                    <h2 class="font-bold">A maneira mais simples de gerenciar seu tempo de trabalho</h2>
+                    <span class="text-xs">Tudo o que você precisa em um painel facilmente personalizável</span>
+                    </div>
+                <div class="relative mx-auto border-gray-800 dark:border-gray-800 bg-gray-800 border-[16px] rounded-t-xl h-[172px] max-w-[301px] md:h-[294px] md:max-w-[512px]">
+                    <div class="rounded-xl overflow-hidden h-[140px] md:h-[262px]">
+                        <img src="{% static 'img/bg_dashboard.png' %}" class="dark:hidden h-[140px] md:h-[262px] w-full rounded-xl" alt="">
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
     
-    <!-- Bloco verde ocupando 50% da tela -->
     <div class="w-full md:w-1/2 h-full flex items-center justify-center">
         <div class="w-full flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
             <div class="">
-                <img class="mx-auto h-10 w-auto" src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company">
+                <div class="h-1/3 mb-[50px]	flex justify-center items-center">
+                    <img
+                      src="{% static 'img/clock-hour-2.svg' %}"
+                      alt="Minha Imagem"
+                      class="text-blue-500"
+                    />
+                    <p class="ml-3 text-2xl font-bold">SysTimer</p>
+                  </div>
                 <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Faça login na sua conta</h2>
             </div>
           
@@ -26,31 +43,40 @@
                 <form class="space-y-6" action="{% url 'validar_login'  %}" method="POST">
                     <div>
                         <label for="email" class="block text-sm/6 font-medium text-gray-900">E-mail</label>
-                        <div class="mt-2">
-                            <input id="email" name="email" placeholder="sys@example.com" type="text" autocomplete="email" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6">
-                        </div>
+                        <div class="relative mb-6">
+                            <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+                              <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 16">
+                                  <path d="m10.036 8.278 9.258-7.79A1.979 1.979 0 0 0 18 0H2A1.987 1.987 0 0 0 .641.541l9.395 7.737Z"/>
+                                  <path d="M11.241 9.817c-.36.275-.801.425-1.255.427-.428 0-.845-.138-1.187-.395L0 2.6V14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2.5l-8.759 7.317Z"/>
+                              </svg>
+                            </div>
+                            <input type="text" name="email" id="input-group-1" class=" border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Email">
+                          </div>
                     </div>
               
                     <div>
                         <div class="flex items-center justify-between">
                             <label for="password" class="block text-sm/6 font-medium text-gray-900">Senha</label>
                             <div class="text-sm">
-                                <a href="#" class="font-semibold text-indigo-600 hover:text-indigo-500" id="forgot-password-link">Esqueceu a Senha?</a>
+                                <a href="#" class="font-semibold text-blue-600 hover:text-blue-500" id="forgot-password-link">Esqueceu a Senha?</a>
                             </div>
                         </div>
-                        <div class="mt-2">
-                            <input id="password" name="password" placeholder="*******" type="password" autocomplete="current-password" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6">
-                        </div>
+                        <div class="relative mb-6">
+                            <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+                                <svg  xmlns="http://www.w3.org/2000/svg"   viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="w-5 h-6 text-gray-500 icon icon-tabler icons-tabler-outline icon-tabler-brand-samsungpass"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 10m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v7a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z" /><path d="M7 10v-1.862c0 -2.838 2.239 -5.138 5 -5.138s5 2.3 5 5.138v1.862" /><path d="M10.485 17.577c.337 .29 .7 .423 1.515 .423h.413c.323 0 .633 -.133 .862 -.368a1.27 1.27 0 0 0 .356 -.886c0 -.332 -.128 -.65 -.356 -.886a1.203 1.203 0 0 0 -.862 -.368h-.826a1.2 1.2 0 0 1 -.861 -.367a1.27 1.27 0 0 1 -.356 -.886c0 -.332 .128 -.651 .356 -.886a1.2 1.2 0 0 1 .861 -.368h.413c.816 0 1.178 .133 1.515 .423" /></svg>
+                            </div>
+                            <input type="password" name="password" id="input-group-1" class=" border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Senha">
+                          </div>
                     </div>
               
                     <div>
-                        <button type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Entrar</button>
+                        <button type="submit" class="flex w-full justify-center rounded-md bg-blue-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">Entrar</button>
                     </div>
                 </form>
           
                 <p class="mt-10 text-center text-sm/6 text-gray-500">
                     Ainda não tem conta?
-                    <a href="{% url 'cadastro'%}" class="font-semibold text-indigo-600 hover:text-indigo-500">Cadastre-se agora mesmo</a>
+                    <a href="{% url 'cadastro'%}" class="font-semibold text-blue-600 hover:text-blue-500">Cadastre-se agora mesmo</a>
                 </p>
             </div>
         </div>
@@ -74,7 +100,7 @@
                                 <form class="space-y-6" action="{% url 'recuperar_acesso'  %}" method="POST">
                                     {% csrf_token %}
                                     <div class="mt-2">
-                                        <input id="email-recuperar" name="recuperar_email" type="email" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6">
+                                        <input id="email-recuperar" name="recuperar_email" type="email" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm/6">
                                     </div>
                                 
 
