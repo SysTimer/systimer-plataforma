@@ -69,21 +69,16 @@ class Tarefas(models.Model):
     class Meta:
         db_table = 'Tarefas' 
 
-class CategoriaHoras(models.Model):
-    CTH_COD = models.AutoField(primary_key=True)
-    CTH_NOME = models.CharField(max_length=100, blank=False, null=False)
+
+class Horas_Trabalhadas(models.Model):
+    HRT_COD = models.AutoField(primary_key=True)
+    HRT_DT_INICIO = models.DateTimeField(default=timezone.now)
+    HRT_DT_FIM = models.DateTimeField(blank=True, null=True)
+    PES_COD = models.ForeignKey(Pessoa, on_delete=models.CASCADE)
+    TRF_COD = models.ForeignKey(Tarefas, on_delete=models.CASCADE)
 
     class Meta:
-        db_table = 'CategoriaHoras' 
-
-class Horas(models.Model):
-    HRO_COD = models.AutoField(primary_key=True)
-    HRO_OBSERVACAO = models.CharField(max_length=150)
-    HRO_CATEGORIA = models.ForeignKey(CategoriaHoras, on_delete=models.CASCADE)
-
-    class Meta:
-        db_table = 'Horas' 
-
+        db_table = 'Horas_Trabalhadas' 
 
 class EmpresaPessoaView(models.Model):
     pes_cod = models.IntegerField(primary_key=True) 
@@ -99,3 +94,17 @@ class EmpresaPessoaView(models.Model):
         managed = False
         
     
+class HorasTarefasVI(models.Model):
+    trf_cod = models.IntegerField(primary_key=True)
+    pes_cod = models.IntegerField()
+    emp_cod_id = models.IntegerField()
+    trf_titulo = models.CharField(max_length=200)  
+    pjt_nome = models.CharField(max_length=150)  
+    pri_nome = models.CharField(max_length=50) 
+    CLI_NOME = models.CharField(max_length=150)  
+    total_tempo_trabalhado = models.CharField(max_length=40) 
+    dt_inicio_iniciada = models.CharField(max_length=40) 
+    status_tarefa = models.CharField(max_length=40) 
+    class Meta:
+        db_table = "SYS_TAREFAS_VI" 
+        managed = False  

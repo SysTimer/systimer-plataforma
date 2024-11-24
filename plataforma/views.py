@@ -1,11 +1,10 @@
-import datetime
+from datetime import datetime
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
-from .models import Projeto, EmpresaPessoaView, Empresa, Pessoa
+from .models import Projeto, EmpresaPessoaView, Empresa, Pessoa, HorasTarefasVI, Tarefas,  Horas_Trabalhadas
 from login.models import LoginAuditoria
-from django.http import HttpResponse
-from django.utils import timezone
+from django.http import JsonResponse
 
 
 @login_required()
@@ -85,19 +84,67 @@ def selecionar_empresa(request):
 
 @login_required
 def renderizar_plataforma(request):
-    print(timezone.now())
     empresa_codigo = request.session.get('emp_cod')
-    
+    pes_cod_id = request.user.PES_COD
     if empresa_codigo is None:
         # avisar ao usuário que falhou ao bter a empresa dele e redirecionar ele para a tela de empresas.
         return redirect('plataforma/')
     
     empresa = Empresa.objects.filter(EMP_COD = empresa_codigo)
+    minhas_tarefas = HorasTarefasVI.objects.filter(emp_cod_id = empresa_codigo, pes_cod = pes_cod_id)
+    
+    
+    
     
     if empresa: 
         retorno = {
             'status': "OK",
             
         }
+        
+    retorno  = {
+        "minhas_tarefas": minhas_tarefas
+    }
     
-    return render(request, 'home.html')
+    return render(request, 'home.html', retorno)
+
+
+
+
+@login_required
+
+def iniciar_tarefa(request):
+    print('Entrou aqui')
+    trf_cod  = request.POST.get('trf_cod')
+    pes_cod = request.user.PES_COD
+    emp_cod = request.session.get('emp_cod')
+    if trf_cod is None:
+        return JsonResponse({'status': 'alert', 'msg': 'Não foi possivel iniciar a tarefa'}, status=202)
+    
+    verificar_tarefa = Tarefas.objects.filter(PES_COD=pes_cod).filter(TRF_COD=trf_cod).first()  
+
+    if verificar_tarefa is  None:
+        print('Entrou aqui')
+        return JsonResponse({'status': 'ERROR', 'Msg': 'Não permitido'}, status=202)
+    
+    minha_tarefa = Tarefas.objects.filter(TRF_COD = trf_cod).first()
+    pessoa = Pessoa.objects.filter(PES_COD = pes_cod).first()
+    data = datetime.now()
+
+    horas_existente = Horas_Trabalhadas.objects.filter(
+    TRF_COD=minha_tarefa,
+    PES_COD=pessoa,
+    HRT_DT_FIM__isnull=True
+    ).first()       
+    
+    if horas_existente:
+        horas_existente.HRT_DT_FIM = data
+        horas_existente.save()
+    else: 
+
+        minhas_horas = Horas_Trabalhadas(HRT_DT_INICIO = data, PES_COD = pessoa, TRF_COD = minha_tarefa)
+        minhas_horas.save()
+        
+    return JsonResponse({'status': 'OK', 'Msg': 'Iniciado com Sucesso'}, status=202)
+
+    

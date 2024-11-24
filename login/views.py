@@ -67,7 +67,6 @@ def validar_cadastro(request):
     
     try:
         senha_codificada = make_password(pes_senha)
-        print('Senha - > ', senha_codificada.decode('UTF-8'))
         
         with transaction.atomic():
             usuario = Pessoa(
@@ -110,10 +109,7 @@ def validar_token(request):
     if token_usuario.exists():
         token_instance = token_usuario[0]
         data_atual = timezone.now()
-        print('token existe')
-        # Acessando o ID da pessoa associada ao token
         if token_instance.PST_DATA_EXPIRACAO >= data_atual:
-            print('Pasosu aqui')
             pessoa_tk = token_usuario.first()
             pessoa_senha = Pessoa.objects.filter(PES_COD= token_instance.PES_COD_id).first()
             pessoa_senha.password = make_password(senha)
