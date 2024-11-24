@@ -76,7 +76,7 @@ class Horas_Trabalhadas(models.Model):
     HRT_DT_FIM = models.DateTimeField(blank=True, null=True)
     PES_COD = models.ForeignKey(Pessoa, on_delete=models.CASCADE)
     TRF_COD = models.ForeignKey(Tarefas, on_delete=models.CASCADE)
-
+    HRT_STATUS = models.CharField(max_length=1, default='A')
     class Meta:
         db_table = 'Horas_Trabalhadas' 
 

@@ -1,37 +1,41 @@
-window.addEventListener('load', function() {
-        var tempos = document.querySelectorAll('.tempo_inicio');
-        
-        tempos.forEach((i) => {
-            if (i.textContent != '00:00:00') {
-                
-                var partes = i.textContent.split(':');
-                var horas = parseInt(partes[0], 10);
-                var minutos = parseInt(partes[1], 10);
-                var segundos = parseInt(partes[2], 10);
+const btnClique = document.getElementById('verMais');
 
-                setInterval(function() {
-
-
-                        segundos += 1;
-
-
-                        if (segundos == 60) { 
-                                segundos = 0;
-                                minutos += 1;
-                        }
-                        
-                        if (minutos == 60) { 
-                                minutos = 0;
-                                horas += 1;
-                        }
-
-                        i.textContent = formatarTempo(horas, minutos, segundos);
-
-                }, 1000);
-            }
-        });
+window.addEventListener('load', function () {
+        // Seleciona o elemento com a classe 'timestamp'
+        let spanIniciada = document.querySelector('.timestamp');
+    
+        if (spanIniciada) {
+            // Obtém o texto inicial do elemento e divide em horas, minutos e segundos
+            console.log('Início:', spanIniciada.textContent);
+            let partes = spanIniciada.textContent.split(':');
+            let horas = parseInt(partes[0], 10) || 0;
+            let minutos = parseInt(partes[1], 10) || 0;
+            let segundos = parseInt(partes[2], 10) || 0;
+    
+            setInterval(function () {
+                segundos += 1;
+    
+                if (segundos === 60) {
+                    segundos = 0;
+                    minutos += 1;
+                }
+    
+                if (minutos === 60) {
+                    minutos = 0;
+                    horas += 1;
+                }
+    
+                // Atualiza o texto do elemento
+                spanIniciada.textContent = formatarTempo(horas, minutos, segundos);
+            }, 1000);
+        }
     });
+    
 
+
+function enviarHoras(trf_cod) {
+    alert(trf_cod)
+}
 
 function formatarTempo(horas, minutos, segundos) {
         horas = horas < 10 ? '0' + horas : horas;

@@ -1,10 +1,10 @@
-from datetime import datetime
+import datetime
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from .models import Projeto, EmpresaPessoaView, Empresa, Pessoa, HorasTarefasVI, Tarefas,  Horas_Trabalhadas
 from login.models import LoginAuditoria
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 
 
 @login_required()
@@ -90,23 +90,24 @@ def renderizar_plataforma(request):
         # avisar ao usuário que falhou ao bter a empresa dele e redirecionar ele para a tela de empresas.
         return redirect('plataforma/')
     
-    empresa = Empresa.objects.filter(EMP_COD = empresa_codigo)
-    minhas_tarefas = HorasTarefasVI.objects.filter(emp_cod_id = empresa_codigo, pes_cod = pes_cod_id)
+    try:
+        empresa = Empresa.objects.filter(EMP_COD = empresa_codigo)
+        minhas_tarefas = HorasTarefasVI.objects.filter(emp_cod_id = empresa_codigo, pes_cod = pes_cod_id)
     
     
-    
-    
-    if empresa: 
-        retorno = {
-            'status': "OK",
+
+        if empresa: 
+            retorno = {
+                'status': "OK",
+                
+            }
             
+        retorno  = {
+            "minhas_tarefas": minhas_tarefas
         }
-        
-    retorno  = {
-        "minhas_tarefas": minhas_tarefas
-    }
-    
-    return render(request, 'home.html', retorno)
+        return render(request, 'home.html', retorno)
+    except Exception as e:
+        return HttpResponse(e); 
 
 
 
@@ -114,7 +115,6 @@ def renderizar_plataforma(request):
 @login_required
 
 def iniciar_tarefa(request):
-    print('Entrou aqui')
     trf_cod  = request.POST.get('trf_cod')
     pes_cod = request.user.PES_COD
     emp_cod = request.session.get('emp_cod')
@@ -129,7 +129,8 @@ def iniciar_tarefa(request):
     
     minha_tarefa = Tarefas.objects.filter(TRF_COD = trf_cod).first()
     pessoa = Pessoa.objects.filter(PES_COD = pes_cod).first()
-    data = datetime.now()
+    data = datetime.datetime.now()
+
 
     horas_existente = Horas_Trabalhadas.objects.filter(
     TRF_COD=minha_tarefa,
@@ -141,6 +142,12 @@ def iniciar_tarefa(request):
         horas_existente.HRT_DT_FIM = data
         horas_existente.save()
     else: 
+        
+        tarefa_inicia_existente = Horas_Trabalhadas.objects.filter(PES_COD = pes_cod, HRT_DT_FIM__isnull=True ).first()
+    
+        if tarefa_inicia_existente:
+            tarefa_inicia_existente.HRT_DT_FIM = data;
+            tarefa_inicia_existente.save()
 
         minhas_horas = Horas_Trabalhadas(HRT_DT_INICIO = data, PES_COD = pessoa, TRF_COD = minha_tarefa)
         minhas_horas.save()

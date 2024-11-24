@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load custom_filters %}
+
 {% block titulo %}
+
+
 <title>SysTimer - Home</title>
 {% endblock %}
 
@@ -157,17 +161,20 @@
                                             <path d="M12 7v5" />
                                         </svg>
                                         {% if tarefa.status_tarefa == 'Iniciada' %}
-                                            <span id="inciada" class="tempo_inicio font-semibold ml-2">{{tarefa.dt_inicio_iniciada|time:"H:i:s"}}</span>
+                                            <span class="timestamp tempo_inicio font-semibold ml-2">{{tarefa.dt_inicio_iniciada}}</span>
                                         {% else %}
-                                        <span  id="pausada" class="tempo_inicio font-semibold ml-2">00:00:00</span>
-
+                                        <span class="tempo_inicio font-semibold ml-2">00:00:00</span>
                                         {% endif %}
                                     </div>
                                 </td>
                                 <td class="px-6 py-4">
                                     <div class="flex items-center  p-1  justify-center rounded-xl">
                                         <svg  xmlns="http://www.w3.org/2000/svg"   width="20" height="20" viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-clock-hour-1"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M12 7v5" /><path d="M12 12l2 -3" /></svg>
+                                        {% if tarefa.total_tempo_trabalhado != null %}
                                         <span class="font-semibold ml-2">{{ tarefa.total_tempo_trabalhado|time:"H:i:s"}}</span>
+                                        {% else %}
+                                        <span class="font-semibold ml-2">00:00:00</span>
+                                        {% endif %}
                                     </div>
                                 </td>
 
@@ -175,14 +182,14 @@
                                 {% if tarefa.status_tarefa == 'Pausada' %}
                                     <div
                                         class="flex items-center bg-gray-200 p-0.5 h-[30px] w-[30px] iten justify-center rounded">
-                                        <button id="iniciarTarefa" onclick="iniciarTarefa(19)">
+                                        <button id="iniciarTarefa" onclick="iniciarTarefa({{ tarefa.trf_cod }})">
                                             <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-player-play"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 4v16a1 1 0 0 0 1.524 .852l13 -8a1 1 0 0 0 0 -1.704l-13 -8a1 1 0 0 0 -1.524 .852z" /></svg>
                                         </button>
                                     </div>
                                 {% else %}
                                     <div
                                     class="flex items-center bg-blue-500 p-0.5 h-[30px] w-[30px] iten justify-center rounded">
-                                        <button id="iniciarTarefa" onclick="iniciarTarefa(19)">
+                                        <button id="iniciarTarefa" onclick="iniciarTarefa({{ tarefa.trf_cod }})">
                                             <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="text-white icon icon-tabler icons-tabler-filled icon-tabler-player-pause"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 4h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h2a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2z" /><path d="M17 4h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h2a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2z" /></svg>
                                         </button>
                                      </div>
@@ -190,8 +197,7 @@
                                 </td>
 
                                 <td class="px-6 py-4 ">
-                                    <button id="verMais"
-                                        data-dropdown-toggle="benq-ex2710q-dropdown"
+                                    <button id="verMais"  data-dropdown-toggle="tarefa-{{tarefa.trf_cod|hash}}"
                                         class="mr-10 inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
                                         type="button">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -203,7 +209,45 @@
                                             <path d="M4 12l16 0" />
                                             <path d="M4 18l16 0" />
                                         </svg>
+
                                     </button>
+
+                                    <div id="tarefa-{{tarefa.trf_cod|hash}}" class="dropMenu hidden absolute right-1 w-60 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
+                                        <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="apple-imac-27-dropdown-button">
+                                            <li>
+                                                <a href="#" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Editar</a>
+                                            </li>
+                                        </ul>
+                                        <div class="flex items-center py-1">
+                                            <button  data-modal-target="popup-modal-{{tarefa.trf_cod|hash}}" data-modal-toggle="popup-modal-{{tarefa.trf_cod|hash}}" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Enviar hora para aprovação</button>
+                                        </div>
+                                    </div>
+
+                                    <div id="popup-modal-{{tarefa.trf_cod|hash}}" tabindex="-1" class="hidden fixed inset-0 z-50 flex items-center justify-center w-full h-full">
+                                        <div class="relative p-4 w-full max-w-md max-h-full">
+                                            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                                                <button type="button" class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="popup-modal-{{tarefa.trf_cod|hash}}">
+                                                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                                    </svg>
+                                                    <span class="sr-only">Fechar</span>
+                                                </button>
+                                                <div class="p-4 md:p-5 text-center">
+                                                    <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                                                    </svg>
+                                                    <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Pronto para enviar esta tarefa para aprovação??</h3>
+                                                    <button  data-task-id="{{tarefa.trf_cod|hash}}" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                                        Sim, enviar
+                                                    </button>
+                                                    <button data-modal-hide="popup-modal-{{tarefa.trf_cod|hash}}" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-white focus:outline-none  bg-red-600 hover:bg-red-800  focus:ring-red-300 rounded-lg border   focus:z-10 focus:ring-4  dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Cancelar</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
                                 </td>
                             </tr>
                             {% endfor %}
