@@ -63,8 +63,9 @@ class Tarefas(models.Model):
     TRF_TITULO = models.CharField(max_length=200, blank=False, null=False)
     PES_COD = models.ForeignKey(Pessoa, on_delete=models.CASCADE)
     TRF_PRIORIDADE = models.ForeignKey(Prioridade, on_delete=models.CASCADE)
-    TRF_STATUS = models.CharField(max_length=10, choices=[('P', 'Pendente'), ('C', 'Concluída'), ('A', 'Atrasada')])
-    TRF_DATA_PRAZO = models.DateField()
+    TRF_DATA_CONCLUSAO = models.DateTimeField(blank=True, null=True)
+    TRF_STATUS = models.CharField(max_length=1, default='A')
+    TRF_DATA_CRIACAO =  models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'Tarefas' 
@@ -76,9 +77,18 @@ class Horas_Trabalhadas(models.Model):
     HRT_DT_FIM = models.DateTimeField(blank=True, null=True)
     PES_COD = models.ForeignKey(Pessoa, on_delete=models.CASCADE)
     TRF_COD = models.ForeignKey(Tarefas, on_delete=models.CASCADE)
-    HRT_STATUS = models.CharField(max_length=1, default='A')
+    HRF_STATUS = models.CharField(max_length=1, default='A')
     class Meta:
         db_table = 'Horas_Trabalhadas' 
+
+
+class Horas_Reprovadas(models.Model):
+    HRR_COD = models.AutoField(primary_key=True)
+    HRR_DT_ULTIMA = models.DateTimeField(default=timezone.now)
+    HRR_JUSTIFICATIVA = models.CharField(max_length=200, blank=False, null=False)
+    TRF_COD = models.ForeignKey(Tarefas, on_delete=models.CASCADE)
+    class Meta:
+        db_table = 'Horas_Reprovadas' 
 
 class EmpresaPessoaView(models.Model):
     pes_cod = models.IntegerField(primary_key=True) 
@@ -108,3 +118,20 @@ class HorasTarefasVI(models.Model):
     class Meta:
         db_table = "SYS_TAREFAS_VI" 
         managed = False  
+        
+        
+class SysDetalhesTarefasVi(models.Model):
+    trf_cod = models.IntegerField(primary_key=True)
+    nome_tarefa = models.CharField(max_length=200)
+    nome_cliente = models.CharField(max_length=50)
+    prioridade = models.CharField(max_length=50)
+    total_horas_trabalhadas = models.TimeField()
+    trf_data_conclusao = models.CharField(max_length=10)
+    status = models.CharField(max_length=9)
+    trf_data_criacao = models.CharField(max_length=10)
+    trf_status = models.CharField(max_length=10)
+    pes_Cod = models.IntegerField()
+    HRR_JUSTIFICATIVA  = models.CharField(max_length=10)
+    class Meta:
+        managed = False  
+        db_table = 'SYS_DETALHES_TAREFAS_VI'

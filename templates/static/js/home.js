@@ -33,9 +33,37 @@ window.addEventListener('load', function () {
     
 
 
-function enviarHoras(trf_cod) {
-    alert(trf_cod)
+document.querySelectorAll('button[data-task-id]').forEach(button => {
+        button.addEventListener('click', function() {
+            var taskId = this.getAttribute('data-task-id');
+            enviarHoras(taskId);
+        });
+});
+    
+function enviarHoras(taskId) {
+    console.log('Task ID ', taskId);
+
+    const formData = new URLSearchParams();
+    formData.append('trf_cod', taskId);
+    formData.append('trf_acao', 'P');
+
+    fetch('/plataforma/enviar_banco_horas/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': getCookie('csrftoken') 
+        },
+        body: formData.toString()
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Tarefa iniciada com sucesso:', data);
+    })
+    .catch(error => {
+        console.error('Erro ao iniciar a tarefa:', error);
+    });
 }
+
 
 function formatarTempo(horas, minutos, segundos) {
         horas = horas < 10 ? '0' + horas : horas;
@@ -80,3 +108,4 @@ function iniciarTarefa(trf_cod) {
         }
         return cookieValue;
     }
+

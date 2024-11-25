@@ -2,7 +2,7 @@ import datetime
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
-from .models import Projeto, EmpresaPessoaView, Empresa, Pessoa, HorasTarefasVI, Tarefas,  Horas_Trabalhadas
+from .models import Projeto, EmpresaPessoaView, Empresa, Pessoa, HorasTarefasVI, Tarefas,  Horas_Trabalhadas, SysDetalhesTarefasVi,Horas_Reprovadas, Prioridade, Funcionario, Projeto, Cliente
 from login.models import LoginAuditoria
 from django.http import JsonResponse, HttpResponse
 
@@ -73,7 +73,6 @@ def selecionar_empresa(request):
     empresa = Empresa.objects.get(EMP_COD=emp_cod)
     
     login_auditoria = LoginAuditoria(pes_cod = pessoa, emp_cod  = empresa, la_data_ultima = datetime.datetime.now())
-    print(login_auditoria)
     login_auditoria.save()
 
     
@@ -87,14 +86,15 @@ def renderizar_plataforma(request):
     empresa_codigo = request.session.get('emp_cod')
     pes_cod_id = request.user.PES_COD
     if empresa_codigo is None:
-        # avisar ao usuário que falhou ao bter a empresa dele e redirecionar ele para a tela de empresas.
         return redirect('plataforma/')
     
     try:
         empresa = Empresa.objects.filter(EMP_COD = empresa_codigo)
         minhas_tarefas = HorasTarefasVI.objects.filter(emp_cod_id = empresa_codigo, pes_cod = pes_cod_id)
-    
-    
+        tarefas_pendentes = SysDetalhesTarefasVi.objects.filter(trf_status = 'P', pes_Cod = pes_cod_id)
+        tarefas_reprovadas = SysDetalhesTarefasVi.objects.filter(trf_status = 'R', pes_Cod = pes_cod_id)
+        tarefas_aprovadas = SysDetalhesTarefasVi.objects.filter(trf_status = 'AP', pes_Cod = pes_cod_id)
+
 
         if empresa: 
             retorno = {
@@ -103,7 +103,11 @@ def renderizar_plataforma(request):
             }
             
         retorno  = {
-            "minhas_tarefas": minhas_tarefas
+            "minhas_tarefas": minhas_tarefas,
+            "trf_pendente": tarefas_pendentes,
+            "tarefas_reprovadas": tarefas_reprovadas,
+            "quantidade_pendente": tarefas_pendentes.count(),
+            "tarefas_aprovadas": tarefas_aprovadas,
         }
         return render(request, 'home.html', retorno)
     except Exception as e:
@@ -113,7 +117,6 @@ def renderizar_plataforma(request):
 
 
 @login_required
-
 def iniciar_tarefa(request):
     trf_cod  = request.POST.get('trf_cod')
     pes_cod = request.user.PES_COD
@@ -154,4 +157,113 @@ def iniciar_tarefa(request):
         
     return JsonResponse({'status': 'OK', 'Msg': 'Iniciado com Sucesso'}, status=202)
 
+
+@login_required
+def enviar_banco_horas(request):
+    if request.method != 'POST':
+        return JsonResponse({'status': 'error', 'message': 'Método não permitido.'}, status=405)
+
+    trf_cod = request.POST.get('trf_cod')
+    trf_acao = request.POST.get('trf_acao')
+    pes_cod = request.user.PES_COD
     
+
+    if not pes_cod:
+        return JsonResponse({'status': 'ERROR', 'Msg': 'Usuário não localizado'}, status=401)
+    if not trf_cod:
+        return JsonResponse({'status': 'ERROR', 'Msg': 'Tarefa não localizada'}, status=404)
+    if not trf_acao:
+        return JsonResponse({'status': 'ERROR', 'Msg': 'Ação não localizada'}, status=404)
+
+    try:
+        horas_existente = Tarefas.objects.filter(PES_COD_id=pes_cod, TRF_COD=trf_cod).first()
+        if not horas_existente:
+            return JsonResponse({'status': 'ERROR', 'Msg': 'Usuário não autorizado a modificar a tarefa'}, status=401)
+        data = datetime.datetime.now()
+
+        if trf_acao in ['P', 'AR', 'R']:
+           horas_existente.TRF_STATUS = trf_acao
+           horas_existente.TRF_DATA_CONCLUSAO =  data
+           horas_existente.save()
+           return JsonResponse({'status': 'OK', 'Msg': 'Tarefa modificada com sucesso'}, status=202)
+        else:
+            return JsonResponse({'status': 'ERROR', 'Msg': 'Ação inválida'}, status=400)
+
+    except Exception as e:
+        # Tratamento genérico para exceções
+        return JsonResponse({'status': 'ERROR', 'Msg': f'Erro interno: {str(e)}'}, status=500)
+
+
+    
+    
+    
+@login_required
+def atualizar_registro(request):
+    trf_cod = request.POST.get('trf_cod')
+    justificativa =  request.POST.get('justificativa')
+    pes_cod = request.user.PES_COD
+
+    print('trf_cod -> ', trf_cod, ' justify ->', justificativa)
+
+    if trf_cod is None or pes_cod is None:
+        return HttpResponse("ERRO")
+
+    
+    tarefa = Tarefas.objects.filter(TRF_COD = trf_cod, PES_COD = pes_cod).first()
+    data = datetime.datetime.now()
+
+    if tarefa:
+        hr_reprovada = Horas_Reprovadas(HRR_DT_ULTIMA = data ,HRR_JUSTIFICATIVA = justificativa, TRF_COD = tarefa )
+        hr_reprovada.save()
+        tarefa.TRF_STATUS = 'R'
+        tarefa.save()
+        return redirect('/')
+    else: 
+        return HttpResponse("ERRO  TRESTE")
+
+         
+
+
+@login_required
+def renderizar_cadastro(request):
+    cargo = request.session.get('cargo')
+    usuario = request.user
+    emp_cod = request.session.get('emp_cod')
+    
+    try:
+        funcionario = Funcionario.objects.get(PES_COD=usuario.PES_COD)
+        empresa = funcionario.EMP_COD
+    except Funcionario.DoesNotExist:
+        empresa = None
+
+    projetos = Projeto.objects.filter(CLI_COD__EMP_COD=emp_cod) 
+    prioridades = Prioridade.objects.all()
+
+    print('EMP_COD > ', empresa)
+
+    if cargo == 'Dono': 
+        funcionarios = Funcionario.objects.all()
+    else:
+        funcionarios = Funcionario.objects.filter(PES_COD=usuario.PES_COD)
+
+    # Carregar os clientes associados à empresa do usuário
+    clientes = Cliente.objects.filter(EMP_COD=emp_cod) if empresa else Cliente.objects.all()
+
+    return render(request, 'cadastrar_tarefa.html', {
+        'projetos': projetos,
+        'prioridades': prioridades,
+        'funcionarios': funcionarios,
+        'clientes': clientes
+    })
+    
+    
+def projetos_clientes(request):
+    cliente_cod = request.GET.get('cliente_cod')
+    
+    if cliente_cod:
+        projetos = Projeto.objects.filter(CLI_COD=cliente_cod).values('PJT_COD', 'PJT_NOME')
+        projetos_list = list(projetos)
+        
+        return JsonResponse({'projetos': projetos_list})
+    else:
+        return JsonResponse({'error': 'Cliente não especificado'}, status=400)
