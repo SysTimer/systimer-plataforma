@@ -123,8 +123,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 NPM_BIN_PATH = 'C:/Program Files/nodejs/npm.cmd'
 
-<<<<<<< HEAD
-=======
 #Django Message
 
 MESSAGE_TAGS = {
@@ -134,7 +132,3 @@ MESSAGE_TAGS = {
     constants.WARNING: '',
     constants.ERROR: '',
 }
-
-
-# Teste Renê 15-11-2024
->>>>>>> dd2b781c18654cc6865a7f3fb562ffdd580dd0dc

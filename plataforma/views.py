@@ -89,30 +89,30 @@ def renderizar_plataforma(request):
     if empresa_codigo is None:
         return redirect('plataforma/')
     
-    try:
-        empresa = Empresa.objects.filter(EMP_COD = empresa_codigo)
-        minhas_tarefas = HorasTarefasVI.objects.filter(emp_cod_id = empresa_codigo, pes_cod = pes_cod_id)
-        tarefas_pendentes = SysDetalhesTarefasVi.objects.filter(trf_status = 'P', pes_Cod = pes_cod_id)
-        tarefas_reprovadas = SysDetalhesTarefasVi.objects.filter(trf_status = 'R', pes_Cod = pes_cod_id)
-        tarefas_aprovadas = SysDetalhesTarefasVi.objects.filter(trf_status = 'AP', pes_Cod = pes_cod_id)
+        
+    funcionario = Funcionario.objects.filter(PES_COD =  pes_cod_id).first()
+        
+    empresa = Empresa.objects.filter(EMP_COD = empresa_codigo)
+    minhas_tarefas = HorasTarefasVI.objects.filter(emp_cod_id = empresa_codigo, fun_cod = funcionario.FUN_COD)
+    tarefas_pendentes = SysDetalhesTarefasVi.objects.filter(trf_status='P', fun_cod=funcionario.FUN_COD)
+    tarefas_reprovadas = SysDetalhesTarefasVi.objects.filter(trf_status='R', fun_cod=funcionario.FUN_COD)
+    tarefas_aprovadas = SysDetalhesTarefasVi.objects.filter(trf_status='AP', fun_cod=funcionario.FUN_COD)
 
 
-        if empresa: 
-            retorno = {
-                'status': "OK",
+    if empresa: 
+        retorno = {
+            'status': "OK",
                 
-            }
-            
-        retorno  = {
-            "minhas_tarefas": minhas_tarefas,
-            "trf_pendente": tarefas_pendentes,
-            "tarefas_reprovadas": tarefas_reprovadas,
-            "quantidade_pendente": tarefas_pendentes.count(),
-            "tarefas_aprovadas": tarefas_aprovadas,
         }
-        return render(request, 'home.html', retorno)
-    except Exception as e:
-        return HttpResponse(e); 
+            
+    retorno  = {
+         "minhas_tarefas": minhas_tarefas,
+         "trf_pendente": tarefas_pendentes,
+        "tarefas_reprovadas": tarefas_reprovadas,
+        "quantidade_pendente": tarefas_pendentes.count(),
+        "tarefas_aprovadas": tarefas_aprovadas,
+    }
+    return render(request, 'home.html', retorno)
 
 
 
@@ -278,7 +278,8 @@ def cadastrar_tarefa(request):
     projeto = request.POST.get('projeto')
     prioridade = request.POST.get('prioridade')
     funcionario = request.POST.get('funcionario')
-    emp_cod = request.session.get('emp_cod')
+    titulo = request.POST.get('titulo')
+    observacao = request.POST.get('obs')
 
      # Pedro - Adicionar Django Message!
     if not cliente or not projeto:
@@ -289,11 +290,15 @@ def cadastrar_tarefa(request):
         messages.warning(request, 'Prioridade não selecionado!')
 
   
-    projeto_instancia = Projeto.objects.filter(PJT_COD = projeto)
-    prioridade_instancia = Prioridade.objects.filter(PRI_COD = prioridade)
-    funcionario_instancia = Funcionario.objects.filter()
+    projeto_instancia = Projeto.objects.filter(PJT_COD = projeto).first()
+    prioridade_instancia = Prioridade.objects.filter(PRI_COD = prioridade).first()
+    funcionario_instancia = Funcionario.objects.filter(FUN_COD = funcionario).first()
     
     
+    tarefa_instancia = Tarefas(PJT_COD = projeto_instancia, TRF_TITULO = titulo, FUN_COD = funcionario_instancia, TRF_PRIORIDADE =  prioridade_instancia, TRF_OBSERVACAO = observacao)
+    tarefa_instancia.save()
+    
+    return redirect('/plataforma/home')
     
     
 def novo_projeto(request):

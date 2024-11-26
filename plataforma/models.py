@@ -61,13 +61,12 @@ class Tarefas(models.Model):
     TRF_COD = models.AutoField(primary_key=True)
     PJT_COD = models.ForeignKey(Projeto, on_delete=models.CASCADE)
     TRF_TITULO = models.CharField(max_length=200, blank=False, null=False)
+    FUN_COD = models.ForeignKey(Funcionario, on_delete=models.CASCADE)  # Mudou aqui
     TRF_PRIORIDADE = models.ForeignKey(Prioridade, on_delete=models.CASCADE)
     TRF_DATA_CONCLUSAO = models.DateTimeField(blank=True, null=True)
     TRF_STATUS = models.CharField(max_length=1, default='A')
     TRF_DATA_CRIACAO =  models.DateTimeField(auto_now=True)
     TRF_OBSERVACAO =  models.CharField(max_length=120, blank=True)
-    FUN_COD = models.ForeignKey(Funcionario, on_delete=models.CASCADE)
-
     class Meta:
         db_table = 'Tarefas' 
 
@@ -107,7 +106,7 @@ class EmpresaPessoaView(models.Model):
     
 class HorasTarefasVI(models.Model):
     trf_cod = models.IntegerField(primary_key=True)
-    pes_cod = models.IntegerField()
+    fun_cod = models.IntegerField()
     emp_cod_id = models.IntegerField()
     trf_titulo = models.CharField(max_length=200)  
     pjt_nome = models.CharField(max_length=150)  
@@ -126,13 +125,15 @@ class SysDetalhesTarefasVi(models.Model):
     nome_tarefa = models.CharField(max_length=200)
     nome_cliente = models.CharField(max_length=50)
     prioridade = models.CharField(max_length=50)
-    total_horas_trabalhadas = models.TimeField()
-    trf_data_conclusao = models.CharField(max_length=10)
+    total_horas_trabalhadas = models.DurationField() 
+    trf_data_conclusao = models.CharField(max_length=10) 
     status = models.CharField(max_length=9)
-    trf_data_criacao = models.CharField(max_length=10)
+    trf_data_criacao = models.CharField(max_length=10)  
     trf_status = models.CharField(max_length=10)
-    pes_Cod = models.IntegerField()
-    HRR_JUSTIFICATIVA  = models.CharField(max_length=10)
+    fun_cod = models.IntegerField()  
+    pes_cod = models.IntegerField()  
+    HRR_JUSTIFICATIVA = models.CharField(max_length=255, null=True, blank=True) 
+
     class Meta:
-        managed = False  
-        db_table = 'SYS_DETALHES_TAREFAS_VI'
+        managed = False 
+        db_table = 'SYS_DETALHES_TAREFAS_VI'  

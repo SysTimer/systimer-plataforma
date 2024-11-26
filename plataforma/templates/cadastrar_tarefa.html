@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block conteudo %}
-<form  method="POST" action="">
+<form  method="POST" action="{% url 'cadastrar_tarefa'%}">
 <div class="h-[80px] flex items-center justify-between w-full p-5">
     <div class="flex items-center  w-full justify-between p-1rounded-xl">
         <div>
@@ -99,9 +99,8 @@
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             required>
             {% for funcionario in funcionarios %}
-            <option value="{{ funcionario.PES_COD.PES_COD }}">
-                {{ funcionario.PES_COD.PES_NOME }} {{ funcionario.PES_COD.PES_SOBRENOME }}
-            </option>
+            <option value="{{ funcionario.FUN_COD }}">
+                {{ funcionario.PES_COD.PES_NOME }} - {{ funcionario.FUN_COD }} - {{ funcionario.PES_COD.PES_SOBRENOME }}            </option>
             {% endfor %}
         </select>
         {% else %}
@@ -109,17 +108,17 @@
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             required>
             {% for funcionario in funcionarios %}
-            <option value="{{ funcionario.PES_COD.PES_COD }}">
-                {{ funcionario.PES_COD.PES_NOME }} {{ funcionario.PES_COD.PES_SOBRENOME }}
+            <option value="{{ funcionario.FUN_COD }}">
+                {{ funcionario.PES_COD.PES_NOME }} - {{ funcionario.FUN_COD }} - {{ funcionario.PES_COD.PES_SOBRENOME }}
             </option>
             {% endfor %}
-        </select>
+        </select>s
         {% endif %}
     </div>
 
     <div>
         <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Observação</label>
-        <textarea id="message" rows="4" maxlength="150" class="block p-2.5 w-full h-[200px] resize-none length text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Digite a observação que deseja da sua tarefa..."></textarea>
+        <textarea id="message" name="obs" rows="4" maxlength="150" class="block p-2.5 w-full h-[200px] resize-none length text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Digite a observação que deseja da sua tarefa..."></textarea>
     </div>
 
 </div>
