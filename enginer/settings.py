@@ -114,11 +114,11 @@ AUTH_USER_MODEL = 'login.Pessoa'
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'templates', 'static'),
-    os.path.join(BASE_DIR, 'theme', 'static_src', 'node_modules', 'flowbite', 'dist'),
+    os.path.join(BASE_DIR, 'theme', 'static_src', 'node_modules', 'flowbite'),
+    os.path.join(BASE_DIR, 'theme', 'static_src', 'node_modules', 'flowbite-typography'),
+    os.path.join(BASE_DIR, 'theme', 'static_src', 'node_modules', '@tiptap'),
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 NPM_BIN_PATH = 'C:/Program Files/nodejs/npm.cmd'
 
-
-# Teste Renê 15-11-2024

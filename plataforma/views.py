@@ -5,6 +5,7 @@ from django.contrib.auth import logout
 from .models import Projeto, EmpresaPessoaView, Empresa, Pessoa, HorasTarefasVI, Tarefas,  Horas_Trabalhadas, SysDetalhesTarefasVi,Horas_Reprovadas, Prioridade, Funcionario, Projeto, Cliente
 from login.models import LoginAuditoria
 from django.http import JsonResponse, HttpResponse
+from django.contrib import messages
 
 
 @login_required()
@@ -231,7 +232,7 @@ def renderizar_cadastro(request):
     emp_cod = request.session.get('emp_cod')
     
     try:
-        funcionario = Funcionario.objects.get(PES_COD=usuario.PES_COD)
+        funcionario = Funcionario.objects.filter(PES_COD=usuario.PES_COD).first()
         empresa = funcionario.EMP_COD
     except Funcionario.DoesNotExist:
         empresa = None
@@ -239,21 +240,21 @@ def renderizar_cadastro(request):
     projetos = Projeto.objects.filter(CLI_COD__EMP_COD=emp_cod) 
     prioridades = Prioridade.objects.all()
 
-    print('EMP_COD > ', empresa)
-
+    print(funcionario.PES_COD.PES_COD)
+    
     if cargo == 'Dono': 
         funcionarios = Funcionario.objects.all()
     else:
         funcionarios = Funcionario.objects.filter(PES_COD=usuario.PES_COD)
 
-    # Carregar os clientes associados à empresa do usuário
     clientes = Cliente.objects.filter(EMP_COD=emp_cod) if empresa else Cliente.objects.all()
 
     return render(request, 'cadastrar_tarefa.html', {
         'projetos': projetos,
         'prioridades': prioridades,
         'funcionarios': funcionarios,
-        'clientes': clientes
+        'clientes': clientes,
+        'cargo': cargo
     })
     
     
@@ -267,3 +268,27 @@ def projetos_clientes(request):
         return JsonResponse({'projetos': projetos_list})
     else:
         return JsonResponse({'error': 'Cliente não especificado'}, status=400)
+    
+    
+    
+@login_required
+def cadastrar_tarefa(request):
+    
+    cliente = request.POST.get('cliente')
+    projeto = request.POST.get('projeto')
+    prioridade = request.POST.get('prioridade')
+    funcionario = request.POST.get('funcionario')
+    emp_cod = request.session.get('emp_cod')
+
+     # Pedro - Adicionar Django Message!
+    if not cliente or not projeto:
+        messages.error(request, 'Cliente ou projeto não pode ser vazio!')
+    elif not funcionario:
+        messages.warning(request, 'Funcionário não selecionado!')
+    elif not prioridade:
+        messages.warning(request, 'Prioridade não selecionado!')
+
+  
+    projeto_instancia = Projeto.objects.filter(PJT_COD = projeto)
+    prioridade_instancia = Prioridade.objects.filter(PRI_COD = prioridade)
+    funcionario_instancia = Funcionario.objects.filter()

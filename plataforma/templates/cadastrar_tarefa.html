@@ -1,101 +1,142 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load custom_filters %}
 
 {% block titulo %}
-
 
 <title>SysTimer - Home</title>
 {% endblock %}
 
 {% block conteudo %}
-
-<div class="h-[40px] flex items-center justify-between  p-5 w-11/12">
-<div class="flex items-center p-1  justify-center rounded-xl">
-        <div class="">
-            <div class="text-[10px] flex items-center  font-semibold text-gray-400">
-            <a class="flex" href="{% url 'renderizar_plataforma' %}">
-                <svg  xmlns="http://www.w3.org/2000/svg"  width="20"  height="20"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-back-up"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 14l-4 -4l4 -4" /><path d="M5 10h11a4 4 0 1 1 0 8h-1" /></svg>
-                <span class="ml-2 text-sm"> Retornar Acompanhamento Tarefas</span>
-            </a>
+<form  method="POST" action="">
+<div class="h-[80px] flex items-center justify-between w-full p-5">
+    <div class="flex items-center  w-full justify-between p-1rounded-xl">
+        <div>
+            <div class="text-[10px] flex items-center  font-semibold text-neutral-400">
+                <a class="flex items-center mb-2" href="{% url 'renderizar_plataforma' %}">
+                    <i class="fa-solid fa-chevron-left font-bold text-xs"></i>
+                    <span class="ml-2 text-xs"> Retornar Acompanhamento Tarefas</span>
+                </a>
+            </div>
+            <div>
+                <span class="text-2xl font-semibold">
+                    Cadastrar Nova Tarefa
+                </span>
             </div>
         </div>
-    </div> 
+
+        <div class="flex p-3 items-center">
+            <button type="submit"
+                class="flex justify-centeri bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="icon icon-tabler icons-tabler-outline icon-tabler-plus">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M12 5l0 14" />
+                    <path d="M5 12l14 0" />
+                </svg>
+                Salvar Tarefa
+            </button>
+        </div>
+    </div>
 </div>
 <hr>
-<form class="p-10" method="POSt" action="">
-    {% csrf_token %}
-    <div class="space-y-4">
-        <!-- Campo Título -->
-        <div>
-            <label for="id_titulo" class="block text-sm font-medium text-gray-700">Título</label>
-            <input type="text" name="titulo" id="id_titulo" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
-        </div>
 
-        <div>
+
+<div>
+
+    
+</div>
+
+
+{% csrf_token %}
+<div class="p-4 space-y-4">
+    <div>
+        <label for="id_titulo" class="block text-sm font-medium text-gray-700">Título</label>
+        <input type="text" name="titulo" id="id_titulo"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            placeholder="Digite o título da Tarefa" required>
+    </div>
+
+    <div class="flex">
+        <div class=" w-full mr-10">
             <label for="id_cliente" class="block text-sm font-medium text-gray-700">Cliente</label>
-            <select name="cliente" id="id_cliente" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" onchange="filtrarProjetos()" required>
+            <select name="cliente" id="id_cliente"
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                onchange="filtrarProjetos()" required>
                 <option value="">Selecione um Cliente</option>
                 {% for cliente in clientes %}
-                    <option value="{{ cliente.CLI_COD }}">{{ cliente.CLI_NOME }}</option>
+                <option value="{{ cliente.CLI_COD }}">{{ cliente.CLI_NOME }}</option>
                 {% endfor %}
             </select>
         </div>
 
-        <div>
+        <div class="w-full">
             <label for="id_projeto" class="block text-sm font-medium text-gray-700">Projeto</label>
-            <select name="projeto" id="id_projeto" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
+            <select name="projeto" id="id_projeto"
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                required>
                 <option value="">Selecione um Projeto</option>
             </select disabled>
         </div>
-
-        <div>
-            <label for="id_prioridade" class="block text-sm font-medium text-gray-700">Prioridade</label>
-            <select name="prioridade" id="id_prioridade" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
-                <option value="">Selecione a Prioridade</option>
-                {% for prioridade in prioridades %}
-                    <option value="{{ prioridade.PRI_COD }}">{{ prioridade.PRI_NOME }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <div>
-            <label for="id_funcionario" class="block text-sm font-medium text-gray-700">Funcionário</label>
-            <select name="funcionario" id="id_funcionario" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
-                <option value="">Selecione o Funcionário</option>
-                {% for funcionario in funcionarios %}
-                    <option value="{{ funcionario.FUN_COD }}">{{ funcionario.PES_COD }}</option> <!-- Assume que PES_COD é o nome da pessoa -->
-                {% endfor %}
-            </select>
-        </div>
-
-        <div>
-            <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Salvar Tarefa</button>
-        </div>
     </div>
+
+    <div>
+        <label for="id_prioridade" class="block text-sm font-medium text-gray-700">Prioridade</label>
+        <select name="prioridade" id="id_prioridade"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            required>
+            <option value="">Selecione a Prioridade</option>
+            {% for prioridade in prioridades %}
+            <option value="{{ prioridade.PRI_COD }}">{{ prioridade.PRI_NOME }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div>
+        <label for="id_funcionario" class="block text-sm font-medium text-gray-700">Responsável</label>
+        {% if cargo == 'Dono'%}
+        <select name="funcionario" id="id_funcionario"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            required>
+            {% for funcionario in funcionarios %}
+            <option value="{{ funcionario.PES_COD.PES_COD }}">
+                {{ funcionario.PES_COD.PES_NOME }} {{ funcionario.PES_COD.PES_SOBRENOME }}
+            </option>
+            {% endfor %}
+        </select>
+        {% else %}
+        <select disabled name="funcionario" id="id_funcionario"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            required>
+            {% for funcionario in funcionarios %}
+            <option value="{{ funcionario.PES_COD.PES_COD }}">
+                {{ funcionario.PES_COD.PES_NOME }} {{ funcionario.PES_COD.PES_SOBRENOME }}
+            </option>
+            {% endfor %}
+        </select>
+        {% endif %}
+    </div>
+
+    <div>
+        <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Observação</label>
+        <textarea id="message" rows="4" maxlength="150" class="block p-2.5 w-full h-[200px] resize-none length text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Digite a observação que deseja da sua tarefa..."></textarea>
+    </div>
+
+</div>
 </form>
 
 
 
-
-
-</div>
-
-
-<hr>
-
-<div>
-
-
-</div>
+<script src="{% static '/js/editor.js' %}" type="module" defer></script>
 
 <script>
+
     function filtrarProjetos() {
         const clienteSelecionado = document.getElementById('id_cliente').value;
         const projetoSelect = document.getElementById('id_projeto');
-        
+
         projetoSelect.innerHTML = '<option value="">Selecione um Projeto</option>';
-        
+
         if (clienteSelecionado) {
             fetch(`/plataforma/get-projetos/?cliente_cod=${clienteSelecionado}`)
                 .then(response => response.json())

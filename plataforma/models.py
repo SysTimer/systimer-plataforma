@@ -61,11 +61,12 @@ class Tarefas(models.Model):
     TRF_COD = models.AutoField(primary_key=True)
     PJT_COD = models.ForeignKey(Projeto, on_delete=models.CASCADE)
     TRF_TITULO = models.CharField(max_length=200, blank=False, null=False)
-    PES_COD = models.ForeignKey(Pessoa, on_delete=models.CASCADE)
     TRF_PRIORIDADE = models.ForeignKey(Prioridade, on_delete=models.CASCADE)
     TRF_DATA_CONCLUSAO = models.DateTimeField(blank=True, null=True)
     TRF_STATUS = models.CharField(max_length=1, default='A')
     TRF_DATA_CRIACAO =  models.DateTimeField(auto_now=True)
+    TRF_OBSERVACAO =  models.CharField(max_length=120, blank=True)
+    FUN_COD = models.ForeignKey(Funcionario, on_delete=models.CASCADE)
 
     class Meta:
         db_table = 'Tarefas' 
