@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+from django.contrib.messages import constants
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / '.env')
@@ -32,7 +33,7 @@ INSTALLED_APPS = [
     'plataforma',
     'tailwind',
     'theme',
-    'django_browser_reload'
+     'django_browser_reload'
 ]
 TAILWIND_APP_NAME = 'theme'
 INTERNAL_IPS = [
@@ -48,7 +49,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    "django_browser_reload.middleware.BrowserReloadMiddleware",
+    # "django_browser_reload.middleware.BrowserReloadMiddleware",
 
 ]
 
@@ -119,6 +120,16 @@ STATICFILES_DIRS = [
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 NPM_BIN_PATH = 'C:/Program Files/nodejs/npm.cmd'
+
+#Django Message
+
+MESSAGE_TAGS = {
+    constants.DEBUG: '',
+    constants.INFO: '',
+    constants.SUCCESS: '',
+    constants.WARNING: '',
+    constants.ERROR: '',
+}
 
 
 # Teste Renê 15-11-2024

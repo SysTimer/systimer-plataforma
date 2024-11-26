@@ -13,6 +13,7 @@ urlpatterns = [
     path('atualizar_registro/', views.atualizar_registro, name='atualizar_registro'),
     path('renderizar_cadastro/', views.renderizar_cadastro, name='renderizar_cadastro'),
     path('get-projetos/', views.projetos_clientes, name='get_projetos'),
-
+    path('novo_projeto/', views.novo_projeto, name='novo_projeto'),
+    path("listar_clientes/", views.listar_clientes, name="listar_clientes"),
 
 ]

@@ -7,6 +7,7 @@ from login.models import LoginAuditoria
 from django.http import JsonResponse, HttpResponse
 
 
+
 @login_required()
 def response(request):
     print('response > ', request)
@@ -267,3 +268,13 @@ def projetos_clientes(request):
         return JsonResponse({'projetos': projetos_list})
     else:
         return JsonResponse({'error': 'Cliente não especificado'}, status=400)
+    
+def novo_projeto(request):
+    return render (request, 'novo_projeto.html')
+
+
+def listar_clientes(request):
+    if request.method == 'GET':
+        clientes = Cliente.objects.values('CLI_COD', 'CLI_NOME')
+        return JsonResponse(list(clientes), safe=False)
+    return JsonResponse({'error': 'Método não permitido'}, status=405)
