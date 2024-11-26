@@ -26,8 +26,8 @@ class Funcionario(models.Model):
     EMP_COD = models.ForeignKey(Empresa, on_delete=models.CASCADE)
     FUNC_DT_CADASTRO = models.DateTimeField(default=timezone.now)
     FUN_ROLES = models.ForeignKey(Cargo, on_delete=models.DO_NOTHING)
-    FUN_MAXIMO_HORAS = models.IntegerField()
-    FUN_VALOR_HORA = models.DecimalField(max_digits=10, decimal_places=2)
+    FUN_MAXIMO_HORAS = models.IntegerField(blank=True, null=True)
+    FUN_VALOR_HORA = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
     class Meta:
         db_table = 'Funcionario' 

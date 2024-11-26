@@ -23,6 +23,7 @@ class Pessoa(AbstractBaseUser, PermissionsMixin):
     PES_NOME = models.CharField(max_length=30, null=False)
     PES_SOBRENOME = models.CharField(max_length=20, null=False)
     PES_EMAIL = models.EmailField(max_length=50, null=False, unique=True)  
+    PES_ADMINISTRADOR = models.CharField(max_length= 1, blank=False, null=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     password = models.CharField(max_length=100, null=False) 

@@ -7,6 +7,7 @@ from django.db import transaction
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
 import secrets
+from plataforma.models import Funcionario, Cargo
 
 from django.http import HttpResponse
 from django.utils import timezone
@@ -75,7 +76,6 @@ def validar_cadastro(request):
                 password=senha_codificada
             )
             usuario.save()
-            print('Usuário salvo com sucesso!')
         
         with transaction.atomic():
             empresa = Empresa(
@@ -83,13 +83,22 @@ def validar_cadastro(request):
                 PES_COD=usuario 
             )
             empresa.save()
-            print('Empresa salva com sucesso!')
+           
+        cargo  =  Cargo.objects.filter(CARGO_NOME = 'Administrador').first()
+         
+        if cargo is None:
+            cargo = Cargo(CARGO_NOME = 'Administrador')
+            cargo.save()
+        
+
+        with transaction.atomic():
+            funcionario = Funcionario(PES_COD = usuario, EMP_COD = empresa, FUN_ROLES = cargo)
+            funcionario.save()
         
         pessoa_login = Pessoa.objects.filter(PES_EMAIL = pes_email, PES_NOME = pes_nome).first()
-        
         usuario = auth.authenticate(request, username=pes_email, password=pes_senha)
-        auth.login(request, usuario)
         return redirect('/plataforma')
+        auth.login(request, usuario)
     except Exception as e:
         print('Exceção causada > ', e)
         return redirect('/auth/cadastro')

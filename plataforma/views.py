@@ -91,6 +91,8 @@ def renderizar_plataforma(request):
     
         
     funcionario = Funcionario.objects.filter(PES_COD =  pes_cod_id).first()
+    
+    print(funcionario)
         
     empresa = Empresa.objects.filter(EMP_COD = empresa_codigo)
     minhas_tarefas = HorasTarefasVI.objects.filter(emp_cod_id = empresa_codigo, fun_cod = funcionario.FUN_COD)
@@ -289,7 +291,6 @@ def cadastrar_tarefa(request):
     elif not prioridade:
         messages.warning(request, 'Prioridade não selecionado!')
 
-  
     projeto_instancia = Projeto.objects.filter(PJT_COD = projeto).first()
     prioridade_instancia = Prioridade.objects.filter(PRI_COD = prioridade).first()
     funcionario_instancia = Funcionario.objects.filter(FUN_COD = funcionario).first()
@@ -301,6 +302,8 @@ def cadastrar_tarefa(request):
     return redirect('/plataforma/home')
     
     
+    
+@login_required    
 def novo_projeto(request):
     emp_cod = request.session.get('emp_cod'); 
     
@@ -316,9 +319,3 @@ def novo_projeto(request):
     
     return render (request, 'novo_projeto.html', retorno)
 
-
-def listar_clientes(request):
-    if request.method == 'GET':
-        clientes = Cliente.objects.values('CLI_COD', 'CLI_NOME')
-        return JsonResponse(list(clientes), safe=False)
-    return JsonResponse({'error': 'Método não permitido'}, status=405)
