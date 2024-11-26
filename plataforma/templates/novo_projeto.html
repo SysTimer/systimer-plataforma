@@ -8,32 +8,68 @@
 {% block conteudo %}
 
 <form>
-    <div class="grid gap-6 mb-6">
-        <!-- Cliente -->
-        <div>
-            <label for="client_select" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Cliente</label>
-            <div class="flex items-center">
-                <div>
-                    <button id="btn-selecionar-cliente" type="button" class="bg-blue-500 text-white px-3 py-2 rounded-lg hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 dark:bg-blue-700 dark:hover:bg-blue-800 dark:focus:ring-blue-900">
-                        Selecione o Cliente
-                    </button>
-                    <select id="dropdown-clientes" name="cliente" class="ml-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <option value="">Selecione um cliente</option>
-                    </select>
+    <div class="h-[80px] flex items-center justify-between w-full p-5">
+        <div class="flex items-center  w-full justify-between p-1rounded-xl">
+            <div>
+                <div class="text-[10px] flex items-center  font-semibold text-neutral-400">
+                    <a class="flex items-center mb-2" href="{% url 'renderizar_plataforma' %}">
+                        <i class="fa-solid fa-chevron-left font-bold text-xs"></i>
+                        <span class="ml-2 text-xs"> Retornar para Projetos</span>
+                    </a>
                 </div>
-                <button type="button" class="ml-4 bg-blue-500 text-white px-3 py-2 rounded-lg hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 dark:bg-blue-700 dark:hover:bg-blue-800 dark:focus:ring-blue-900">
-                    + Novo Cliente
+                <div>
+                    <span class="text-2xl font-semibold">
+                        Cadastrar Novo Projeto
+                    </span>
+                </div>
+            </div>
+    
+            <div class="flex p-3 items-center">
+                <button type="submit"
+                    class="flex justify-centeri bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="icon icon-tabler icons-tabler-outline icon-tabler-plus">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M12 5l0 14" />
+                        <path d="M5 12l14 0" />
+                    </svg>
+                    Salvar novo Projeto
                 </button>
             </div>
         </div>
+    </div>
+<hr>
 
-        <!-- Nome do Projeto -->
-        <div>
-            <label for="project_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nome do Projeto</label>
-            <input type="text" id="project_name" name="nome_projeto" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Projeto..." required />
+
+
+    <div class="p-3 grid gap-6 mb-6">
+        <!-- Cliente -->
+        <div class="w-full justify-between ">
+            <label for="client_select" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Cliente</label>
+            <div class="flex justify-between items-center">
+                <div class="w-full">
+                    <select id="dropdown-clientes" name="cliente" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        {% for item in cliente %}
+                             <option value="item.CLI_COD">{{ item.CLI_NOME }}</option>
+                        {% endfor %}
+                     </select>
+                </div>
+               
+                <div class="ml-4 w-full ">
+                    <span>ou</span>
+                    <button type="button" class="ml-4 bg-blue-500 text-white px-3 py-2 rounded-lg hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 dark:bg-blue-700 dark:hover:bg-blue-800 dark:focus:ring-blue-900">
+                        + Adicionar Novo Cliente
+                    </button>
+                </div>
+            </div>
         </div>
 
-        <!-- Datas -->
+        <div class="">
+            <label for="project_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nome do Projeto</label>
+        <input type="text" id="project_name" name="nome_projeto" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Projeto..." required />
+        </div>
+
         <div>
             <label for="start_date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Datas</label>
             <div class="flex items-center">
@@ -43,46 +79,13 @@
             </div>
         </div>
 
-        <!-- Notas -->
         <div>
             <label for="notes" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Notas</label>
             <textarea id="notes" name="notas" rows="4" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Escreva as notas aqui..." required></textarea>
         </div>
-        <button type="submit" class="mt-4 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 focus:ring-4 focus:ring-green-300 dark:bg-green-700 dark:hover:bg-green-800 dark:focus:ring-green-900">
-            Salvar Projeto
-        </button>
+
     </div>
 </form>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        document.getElementById('btn-selecionar-cliente').addEventListener('click', function () {
-            fetch('/listar-clientes/')
-                .then(response => {
-                    if (response.ok) {
-                        return response.json();
-                    } else {
-                        throw new Error('Erro ao buscar clientes');
-                    }
-                })
-                .then(clientes => {
-                    const dropdown = document.getElementById('dropdown-clientes');
-                    dropdown.innerHTML = '<option value="">Selecione um cliente</option>'; 
-    
-                    clientes.forEach(cliente => {
-                        const option = document.createElement('option');
-                        option.value = cliente.CLI_COD;
-                        option.textContent = cliente.CLI_NOME;
-                        dropdown.appendChild(option);
-                    });
-                })
-                .catch(error => {
-                    console.error('Erro:', error);
-                    alert('Erro ao buscar clientes. Tente novamente.');
-                });
-        });
-    });
-    
-</script>
 
 {% endblock %}

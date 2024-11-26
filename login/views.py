@@ -41,21 +41,20 @@ def validar_login(request):
     return redirect('/auth/login')
 
 def validar_cadastro(request):  
+    print('Olá mundo entroui aqui sim')
     pes_nome = request.POST['pes_nome']
     pes_sobrenome = request.POST['pes_sobrenome']
     pes_email = request.POST['pes_email']
     pes_senha = request.POST['pes_senha']
     emp_nome = request.POST['emp_nome']
+        
+    # if len(pes_nome.strip()) == 0 or len(pes_email.strip()) == 0 or len(pes_sobrenome.strip()) == 0 or len(emp_nome.strip()) == 0:
+    #     messages.add_message(request, constants.WARNING, 'Email, nome, Sobrenome ou Empresa não podem ser vazio')
+    #     return redirect('/auth/cadastro')
     
-    print(request.POST)
-    
-    if len(pes_nome.strip()) == 0 or len(pes_email.strip()) == 0 or len(pes_sobrenome.strip()) == 0 or len(emp_nome.strip()) == 0:
-        messages.add_message(request, constants.WARNING, 'Email, nome, Sobrenome ou Empresa não podem ser vazio')
-        return redirect('/auth/cadastro')
-    
-    elif len(pes_senha) < 8:
-        messages.add_message(request, constants.WARNING, 'Sua senha deve ter no mínimo 8 caracteres')
-        return redirect('/auth/cadastro')
+    # elif len(pes_senha) < 8:
+    #     messages.add_message(request, constants.WARNING, 'Sua senha deve ter no mínimo 8 caracteres')
+    #     return redirect('/auth/cadastro')
     
     # elif User.objects.filter(email=pes_email).exists():
     #     messages.add_message(request, constants.WARNING, 'Já existe um usuário com esse e-mail')
@@ -64,7 +63,7 @@ def validar_cadastro(request):
     # elif User.objects.filter(username=pes_nome).exists():
     #     messages.add_message(request, constants.WARNING, 'Já existe um usuário ou empresa com esse nome')
     #     return redirect('/auth/cadastro')
-    
+    print(request.POST)
     try:
         senha_codificada = make_password(pes_senha)
         
@@ -73,7 +72,7 @@ def validar_cadastro(request):
                 PES_NOME=pes_nome, 
                 PES_SOBRENOME=pes_sobrenome, 
                 PES_EMAIL=pes_email, 
-                password=senha_codificada.decode('UTF-8')
+                password=senha_codificada
             )
             usuario.save()
             print('Usuário salvo com sucesso!')
@@ -86,11 +85,13 @@ def validar_cadastro(request):
             empresa.save()
             print('Empresa salva com sucesso!')
         
-        print('Usuário salvo com sucesso!')
-        return redirect('/auth/cadastro')
-    
+        pessoa_login = Pessoa.objects.filter(PES_EMAIL = pes_email, PES_NOME = pes_nome).first()
+        
+        usuario = auth.authenticate(request, username=pes_email, password=pes_senha)
+        auth.login(request, usuario)
+        return redirect('/plataforma')
     except Exception as e:
-        print(e)
+        print('Exceção causada > ', e)
         return redirect('/auth/cadastro')
 
 def recuperar_senha(request):    

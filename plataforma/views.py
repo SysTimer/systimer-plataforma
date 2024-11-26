@@ -302,7 +302,19 @@ def cadastrar_tarefa(request):
     
     
 def novo_projeto(request):
-    return render (request, 'novo_projeto.html')
+    emp_cod = request.session.get('emp_cod'); 
+    
+    if emp_cod is None:
+        return HttpResponse('Erro') # Dps trocar para o alert do django mssgae
+        
+    
+    clientes = Cliente.objects.filter(EMP_COD = emp_cod).values('CLI_COD', 'CLI_NOME')
+    
+    retorno = {
+        "cliente": clientes
+    }
+    
+    return render (request, 'novo_projeto.html', retorno)
 
 
 def listar_clientes(request):
