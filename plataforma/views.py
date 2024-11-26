@@ -292,3 +292,16 @@ def cadastrar_tarefa(request):
     projeto_instancia = Projeto.objects.filter(PJT_COD = projeto)
     prioridade_instancia = Prioridade.objects.filter(PRI_COD = prioridade)
     funcionario_instancia = Funcionario.objects.filter()
+    
+    
+    
+    
+def novo_projeto(request):
+    return render (request, 'novo_projeto.html')
+
+
+def listar_clientes(request):
+    if request.method == 'GET':
+        clientes = Cliente.objects.values('CLI_COD', 'CLI_NOME')
+        return JsonResponse(list(clientes), safe=False)
+    return JsonResponse({'error': 'Método não permitido'}, status=405)
