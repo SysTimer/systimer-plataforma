@@ -1,11 +1,9 @@
 const btnClique = document.getElementById('verMais');
 
 window.addEventListener('load', function () {
-        // Seleciona o elemento com a classe 'timestamp'
         let spanIniciada = document.querySelector('.timestamp');
     
         if (spanIniciada) {
-            // Obtém o texto inicial do elemento e divide em horas, minutos e segundos
             console.log('Início:', spanIniciada.textContent);
             let partes = spanIniciada.textContent.split(':');
             let horas = parseInt(partes[0], 10) || 0;
@@ -24,8 +22,6 @@ window.addEventListener('load', function () {
                     minutos = 0;
                     horas += 1;
                 }
-    
-                // Atualiza o texto do elemento
                 spanIniciada.textContent = formatarTempo(horas, minutos, segundos);
             }, 1000);
         }
@@ -48,6 +44,28 @@ function enviarHoras(taskId) {
     formData.append('trf_acao', 'P');
 
     fetch('/plataforma/enviar_banco_horas/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': getCookie('csrftoken') 
+        },
+        body: formData.toString()
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Tarefa iniciada com sucesso:', data);
+    })
+    .catch(error => {
+        console.error('Erro ao iniciar a tarefa:', error);
+    });
+}
+
+function aprovarTarefa(taskId) {
+    console.log('Tarefas?  ', taskId)
+    const formData = new URLSearchParams();
+    formData.append('trf_cod', taskId);
+
+    fetch('/plataforma/atualizar_registro_aprovada/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -108,4 +126,3 @@ function iniciarTarefa(trf_cod) {
         }
         return cookieValue;
     }
-

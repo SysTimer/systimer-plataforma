@@ -2,7 +2,8 @@ import datetime
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
-from .models import Projeto, EmpresaPessoaView, Empresa, Pessoa, HorasTarefasVI, Tarefas,  Horas_Trabalhadas, SysDetalhesTarefasVi,Horas_Reprovadas, Prioridade, Funcionario, Projeto, Cliente
+from .models import Projeto, EmpresaPessoaView, Empresa, Pessoa, HorasTarefasVI, Tarefas,  Horas_Trabalhadas, Cliente, SysDetalhesTarefasVi,Horas_Reprovadas, Prioridade, Funcionario, Projeto, Cliente, EmpresaInfo,SysGraficosHorasVi
+
 from login.models import LoginAuditoria
 from django.http import JsonResponse, HttpResponse
 from django.contrib import messages
@@ -64,7 +65,6 @@ def selecionar_empresa(request):
     emp_cargo = request.POST.get('cargo_nome')
 
     if emp_cod is None or emp_cargo is None: 
-        # colocar msg de que precisar selecionar alguma empresa la da listin
         return HttpResponse({'sem nome do cargo ou empressa'}); 
     
 
@@ -92,20 +92,16 @@ def renderizar_plataforma(request):
         
     funcionario = Funcionario.objects.filter(PES_COD =  pes_cod_id).first()
     
-    print(funcionario)
         
-    empresa = Empresa.objects.filter(EMP_COD = empresa_codigo)
+    empresa = Empresa.objects.filter(EMP_COD = empresa_codigo).first()
     minhas_tarefas = HorasTarefasVI.objects.filter(emp_cod_id = empresa_codigo, fun_cod = funcionario.FUN_COD)
     tarefas_pendentes = SysDetalhesTarefasVi.objects.filter(trf_status='P', fun_cod=funcionario.FUN_COD)
     tarefas_reprovadas = SysDetalhesTarefasVi.objects.filter(trf_status='R', fun_cod=funcionario.FUN_COD)
     tarefas_aprovadas = SysDetalhesTarefasVi.objects.filter(trf_status='AP', fun_cod=funcionario.FUN_COD)
-
-
-    if empresa: 
-        retorno = {
-            'status': "OK",
-                
-        }
+            
+    for tarefa in tarefas_pendentes:
+     print(tarefa)    
+            
             
     retorno  = {
          "minhas_tarefas": minhas_tarefas,
@@ -113,6 +109,7 @@ def renderizar_plataforma(request):
         "tarefas_reprovadas": tarefas_reprovadas,
         "quantidade_pendente": tarefas_pendentes.count(),
         "tarefas_aprovadas": tarefas_aprovadas,
+        "empresa_nova": empresa.EMP_NOVO
     }
     return render(request, 'home.html', retorno)
 
@@ -127,7 +124,9 @@ def iniciar_tarefa(request):
     if trf_cod is None:
         return JsonResponse({'status': 'alert', 'msg': 'Não foi possivel iniciar a tarefa'}, status=202)
     
-    verificar_tarefa = Tarefas.objects.filter(PES_COD=pes_cod).filter(TRF_COD=trf_cod).first()  
+    funcionario_instancia = Funcionario.objects.filter(PES_COD = pes_cod).first()
+
+    verificar_tarefa = Tarefas.objects.filter(FUN_COD = funcionario_instancia.FUN_COD).filter(TRF_COD=trf_cod).first()  
 
     if verificar_tarefa is  None:
         print('Entrou aqui')
@@ -136,7 +135,6 @@ def iniciar_tarefa(request):
     minha_tarefa = Tarefas.objects.filter(TRF_COD = trf_cod).first()
     pessoa = Pessoa.objects.filter(PES_COD = pes_cod).first()
     data = datetime.datetime.now()
-
 
     horas_existente = Horas_Trabalhadas.objects.filter(
     TRF_COD=minha_tarefa,
@@ -179,7 +177,8 @@ def enviar_banco_horas(request):
         return JsonResponse({'status': 'ERROR', 'Msg': 'Ação não localizada'}, status=404)
 
     try:
-        horas_existente = Tarefas.objects.filter(PES_COD_id=pes_cod, TRF_COD=trf_cod).first()
+        funcionario_instancia = Funcionario.objects.filter(PES_COD = pes_cod).first()
+        horas_existente = Tarefas.objects.filter(FUN_COD = funcionario_instancia.FUN_COD, TRF_COD=trf_cod).first()
         if not horas_existente:
             return JsonResponse({'status': 'ERROR', 'Msg': 'Usuário não autorizado a modificar a tarefa'}, status=401)
         data = datetime.datetime.now()
@@ -193,7 +192,6 @@ def enviar_banco_horas(request):
             return JsonResponse({'status': 'ERROR', 'Msg': 'Ação inválida'}, status=400)
 
     except Exception as e:
-        # Tratamento genérico para exceções
         return JsonResponse({'status': 'ERROR', 'Msg': f'Erro interno: {str(e)}'}, status=500)
 
 
@@ -201,18 +199,16 @@ def enviar_banco_horas(request):
     
     
 @login_required
-def atualizar_registro(request):
+def atualizar_registro_reprovada(request):
     trf_cod = request.POST.get('trf_cod')
     justificativa =  request.POST.get('justificativa')
     pes_cod = request.user.PES_COD
 
-    print('trf_cod -> ', trf_cod, ' justify ->', justificativa)
-
     if trf_cod is None or pes_cod is None:
-        return HttpResponse("ERRO")
+        return JsonResponse({'status': 'ERROR', 'Msg': 'Tarefa inválida ou usuário inválido'}, status=401)
 
-    
-    tarefa = Tarefas.objects.filter(TRF_COD = trf_cod, PES_COD = pes_cod).first()
+    funcionario_instancia = Funcionario.objects.filter(PES_COD = pes_cod).first()
+    tarefa = Tarefas.objects.filter(TRF_COD = trf_cod, FUN_COD = funcionario_instancia.FUN_COD).first()
     data = datetime.datetime.now()
 
     if tarefa:
@@ -220,11 +216,29 @@ def atualizar_registro(request):
         hr_reprovada.save()
         tarefa.TRF_STATUS = 'R'
         tarefa.save()
-        return redirect('/')
+        return redirect('/plataforma/home/')
     else: 
-        return HttpResponse("ERRO  TRESTE")
-
+        return JsonResponse({'status': 'ERROR', 'Msg': 'Não autorizado'}, status=401)    
          
+@login_required
+def atualizar_registro_aprovada(request):
+    trf_cod = request.POST.get('trf_cod')
+    pes_cod = request.user.PES_COD
+    print(request.POST)
+
+    if trf_cod is None or pes_cod is None:
+        return JsonResponse({'status': 'ERROR', 'Msg': 'Tarefa inválida ou usuário inválido'}, status=401)
+
+
+    funcionario_instancia = Funcionario.objects.filter(PES_COD = pes_cod).first()
+    tarefa = Tarefas.objects.filter(TRF_COD = trf_cod, FUN_COD = funcionario_instancia.FUN_COD).first()
+    
+    if tarefa:
+        tarefa.TRF_STATUS = 'AP'
+        tarefa.save()
+        return redirect('/plataforma/home/')
+    else: 
+        return JsonResponse({'status': 'ERROR', 'Msg': 'Não autorizado'}, status=401)    
 
 
 @login_required
@@ -241,16 +255,12 @@ def renderizar_cadastro(request):
 
     projetos = Projeto.objects.filter(CLI_COD__EMP_COD=emp_cod) 
     prioridades = Prioridade.objects.all()
-
     print(funcionario.PES_COD.PES_COD)
-    
-    if cargo == 'Dono': 
+    if cargo == 'Administrador': 
         funcionarios = Funcionario.objects.all()
     else:
         funcionarios = Funcionario.objects.filter(PES_COD=usuario.PES_COD)
-
     clientes = Cliente.objects.filter(EMP_COD=emp_cod) if empresa else Cliente.objects.all()
-
     return render(request, 'cadastrar_tarefa.html', {
         'projetos': projetos,
         'prioridades': prioridades,
@@ -272,9 +282,24 @@ def projetos_clientes(request):
         return JsonResponse({'error': 'Cliente não especificado'}, status=400)
     
     
+@login_required
+def exibir_grafico(request):
+    trf_cod = request.GET.get('tarefa')
+    pes_cod = request.user.PES_COD
+    
+    dados_instancia = SysGraficosHorasVi.objects.filter(TRF_COD_id = trf_cod, PES_COD_id = pes_cod)
+    
+    retorno = {
+        "dados": dados_instancia
+    }
+    
+    return render(request,'analisar.html', retorno)
+    
     
 @login_required
 def cadastrar_tarefa(request):
+    
+    print(request.POST)
     
     cliente = request.POST.get('cliente')
     projeto = request.POST.get('projeto')
@@ -318,4 +343,63 @@ def novo_projeto(request):
     }
     
     return render (request, 'novo_projeto.html', retorno)
+
+
+
+@login_required
+def cadastrar_informacoes(request):
+    tamanho = request.POST.get('tamanho')
+    nome_cliente = request.POST.get('nome_cliente')
+    nome_projeto = request.POST.get('nome_projeto')
+    atuacao = request.POST.get('area')
+    emp_cod = request.session.get('emp_cod')
+
+    
+    if not tamanho or not nome_cliente or not nome_projeto:
+        # PEDRO FAZER AQUI TAMBÉM, E RETORNAR ERRO LA NO FORM
+        return HttpResponse('Teste')
+    
+    try:
+        empresa_instancia = Empresa.objects.filter(EMP_COD = emp_cod ).first()
+        
+        if empresa_instancia:
+            
+            empresa_instancia.EMP_NOVO = 'N'
+            empresa_info = EmpresaInfo(EMP_QUANTIDADE_FUNC = tamanho, EMP_RAMO_ATUACAO = atuacao, EMP_COD = empresa_instancia )
+            
+            cliente_novo = Cliente(CLI_NOME = nome_cliente, EMP_COD = empresa_instancia)
+            cliente_novo.save()
+            
+            projeto = Projeto(PJT_NOME = nome_projeto, CLI_COD = cliente_novo) 
+            projeto.save()
+            empresa_info.save()
+            empresa_instancia.save()
+            return redirect('/plataforma/home/')
+        else: 
+            # PEDRO FAZER AQUI TAMBÉM, E RETORNAR ERRO LA NO FORM
+            return HttpResponse('Retornar o erro para usuário') 
+    except Exception as e: 
+        print(e)
+        return HttpResponse('Retornar o erro para usuário') 
+    
+    
+
+@login_required
+def criar_cliente(request):
+    nome_cliente = request.POST.get('nome_cliente')
+    emp_cod = request.session.get('emp_cod')
+
+    empresa_instancia = Empresa.objects.filter(EMP_COD=emp_cod).first()
+    
+    # Cria e salva o cliente
+    cliente = Cliente(CLI_NOME=nome_cliente, EMP_COD=empresa_instancia)
+    cliente.save()
+
+    referer_url = request.META.get('HTTP_REFERER', '')
+    
+    if '/plataforma/renderizar_cadastro/' in referer_url:
+        return redirect('/plataforma/renderizar_cadastro/')
+    elif '/plataforma/projeto/' in referer_url:
+        return redirect('/plataforma/projeto/')
+    
 

@@ -10,6 +10,62 @@
 {% block conteudo %}
 <hr>
 
+{% if empresa_nova == 'S' %}
+    <div id="setup-modal" tabindex="-1" aria-hidden="true" class=" fixed inset-0 z-50 flex justify-center items-center">
+        <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+        
+        <div class="relative z-10 w-full max-w-lg p-4">
+            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                <div class="flex items-center justify-between p-4 border-b rounded-t dark:border-gray-600">
+                    <h3 id="modal-title" class="text-lg font-semibold text-gray-900 dark:text-white">
+                      Bem-vindo ao SysTimer                  
+                  </h3>
+                </div>
+        <form id="stepper-form" class="p-4" method="POST" action="{% url 'cadastrar_informacoes' %}">
+            {% csrf_token %}
+            <div id="step-1" class="step">
+                        <p class="text-gray-600 dark:text-gray-300 mb-4">Temos apenas algumas perguntas rápidas que nos ajudarão a personalizar sua experiência.</p>
+                        <p class="font-semibold mb-2">Quantos usuários tem a sua empresa?</p>
+                        <div class="flex flex-wrap gap-2">
+                          <div class="relative">
+                              <div class="absolute inset-y-0 start-0 top-0 flex items-center ps-3.5 pointer-events-none">
+                                  <svg  xmlns="http://www.w3.org/2000/svg"  width="20"  height="20"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-users"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" /><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /><path d="M21 21v-2a4 4 0 0 0 -3 -3.85" /></svg>
+                              </div>
+                              <input type="text" id="quantidade" name="tamanho" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="12345" pattern="^\d{5}(-\d{4})?$" required />
+                          </div>
+                        </div>
+                    </div>
+                    <div id="step-2" class="step hidden">
+                        <p class="font-semibold mb-2">Conhecendo sua empresa</p>
+                        <label for="area" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">Área de atuação</label>
+                        <select id="area" name="area" class="block w-full p-2.5 bg-gray-50 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white">
+                            <option value="">Selecione uma área</option>
+                            <option value="tecnologia">Tecnologia</option>
+                            <option value="saude">Saúde</option>
+                            <option value="educacao">Educação</option>
+                        </select>
+                    </div>
+                    <div id="step-3" class="step hidden">
+                        <p class="font-semibold mb-2">Vamos criar seu primeiro projeto</p>
+                        <p>vamos usá-lo para mostrar como monitorar o tempo e obter informações sobre o tempo que você monitora</p>
+                        <hr>
+                        <label for="client-name" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">Nome do Cliente</label>
+                        <input id="client-name" name="nome_cliente" type="text" class="block w-full p-2.5 bg-gray-50 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white" placeholder="Digite o nome do cliente" />
+                        <label for="project-name" class="block text-sm font-medium text-gray-900 dark:text-white mb-2 mt-4">Nome do Projeto</label>
+                        <input id="project-name" name="nome_projeto" type="text" class="block w-full p-2.5 bg-gray-50 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white" placeholder="Digite o nome do projeto" />
+                        <hr>
+  
+                    </div>
+                    <div class="flex justify-between items-center mt-6">
+                        <button type="button" id="prev-step" class="hidden text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100">Voltar</button>
+                        <button type="button" id="next-step" class="text-white bg-blue-700 hover:bg-blue-800 px-4 py-2 rounded-lg">Próximo</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
 <div>
     <div class="border-b flex justify-between  items-center border-gray-200 dark:border-gray-700">
         <div>
@@ -179,8 +235,7 @@
                                         <path d="M12 12l2 -3" />
                                     </svg>
                                     {% if tarefa.total_tempo_trabalhado != null %}
-                                    <span class="font-semibold ml-2">{{
-                                        tarefa.total_tempo_trabalhado|time:"H:i:s"}}</span>
+                                    <span class="font-semibold ml-2">{{tarefa.total_tempo_trabalhado|time:"H:i:s"}}</span>
                                     {% else %}
                                     <span class="font-semibold ml-2">00:00:00</span>
                                     {% endif %}
@@ -315,12 +370,13 @@
                             <th scope="col" class="px-4 py-3">Total Horas</th>
                             <th scope="col" class="px-4 py-3">Última atualização</th>
                             <th scope="col" class="px-4 py-3">Ação</th>
+                            <th scope="col" class="px-4 py-3">Analisar</th>
                             </tr>
                         </thead>
                         <tbody>
                         <tbody>
                             {% for tarefa_pendente in trf_pendente %}
-                            <tr class="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
+                            <tr  class="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
                                 <th scope="row"
                                     class="flex items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     {{ tarefa_pendente.nome_tarefa }}
@@ -343,7 +399,7 @@
                                     {{ tarefa_pendente.trf_data_conclusao }}
                                 </td>
                                 <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    {{ tarefa_pendente.total_horas_trabalhadas }}
+                                    {{ tarefa_pendente.total_horas_trabalhadas|time:"H:i:s" }}
                                 </td>
                                 <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     {{ tarefa_pendente.status }}
@@ -368,8 +424,7 @@
                                         class="dropMenu hidden absolute right-1 w-60 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
                                         <ul class="py-1 text-sm text-gray-700 dark:text-gray-200">
                                             <li>
-                                                <a href="#"
-                                                    class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Aprovar</a>
+                                                <button type="button" onclick="aprovarTarefa({{tarefa_pendente.trf_cod}})" class="py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Aprovar</button>
                                             </li>
                                         </ul>
                                         <div class="flex items-center py-1">
@@ -383,9 +438,7 @@
                                     <div id="crud-modal-{{tarefa_pendente.trf_cod}}" tabindex="-1" aria-hidden="true"
                                         class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
                                         <div class="relative p-4 w-full max-w-md max-h-full">
-                                            <!-- Modal content -->
                                             <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                                                <!-- Modal header -->
                                                 <div
                                                     class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                                                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
@@ -421,7 +474,7 @@
                                                             <input type="text" name="trf_cod" id="trf_cod"
                                                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                                                 placeholder="Type product name"
-                                                                value="{{tarefa_pendente.trf_cod}}" disabled>
+                                                                value="{{tarefa_pendente.trf_cod}}" >
                                                         </div>
 
                                                         <div class="col-span-2 mt-10">
@@ -450,6 +503,10 @@
                                     </div>
 
 
+                                </td>
+                                
+                                <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    <a href="{% url 'analisar' %}?tarefa={{ tarefa_pendente.trf_cod }}" id="analisar"><svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-chart-bar"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 13a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" /><path d="M15 9a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" /><path d="M9 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" /><path d="M4 20h14" /></svg></a>
                                 </td>
 
                             </tr>
@@ -508,7 +565,7 @@
                                 {{ tarefa_pendente.trf_data_conclusao }}
                             </td>
                             <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {{ tarefa_pendente.total_horas_trabalhadas }}
+                                {{ tarefa_pendente.total_horas_trabalhadas|time:"H:i:s" }}
                             </td>
 
                         </tr>
@@ -571,7 +628,7 @@
                                 {{ tarefa_aprovada.trf_data_conclusao }}
                             </td>
                             <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {{ tarefa_aprovada.total_horas_trabalhadas }}
+                                {{ tarefa_aprovada.total_horas_trabalhadas|time:"H:i:s" }}
                             </td>
 
                         </tr>
@@ -584,6 +641,70 @@
 
 
 </div>
+
+{% if empresa_nova == 'S' %}
+<script>
+    const steps = document.querySelectorAll(".step");
+    const nextButton = document.getElementById("next-step");
+    const prevButton = document.getElementById("prev-step");
+    let currentStep = 0;
+
+    const formulario = document.getElementById('stepper-form');
+
+    function showStep(stepIndex) {
+        steps.forEach((step, index) => {
+            step.classList.toggle("hidden", index !== stepIndex);
+        });
+
+        prevButton.classList.toggle("hidden", stepIndex === 0);
+        nextButton.textContent = stepIndex === steps.length - 1 ? "Finalizar" : "Próximo";
+    }
+
+    function validateStep() {
+        const currentInputs = steps[currentStep].querySelectorAll("input, select");
+        let allValid = true;
+
+        currentInputs.forEach((input) => {
+            const errorMessage = input.nextElementSibling;
+            if (input.value.trim() === "") {
+                allValid = false;
+                if (!errorMessage || !errorMessage.classList.contains("error-message")) {
+                    const error = document.createElement("div");
+                    error.textContent = "Este campo é obrigatório.";
+                    error.className = "error-message text-red-600 text-sm mt-1";
+                    input.parentElement.appendChild(error);
+                }
+            } else {
+                if (errorMessage && errorMessage.classList.contains("error-message")) {
+                    errorMessage.remove();
+                }
+            }
+        });
+
+        return allValid;
+    }
+
+    nextButton.addEventListener("click", function () {
+        if (validateStep()) {
+            if (currentStep < steps.length - 1) {
+                currentStep++;
+                showStep(currentStep);
+            } else {
+                formulario.submit();
+            }
+        }
+    });
+
+    prevButton.addEventListener("click", function () {
+        if (currentStep > 0) {
+            currentStep--;
+            showStep(currentStep);
+        }
+    });
+
+    showStep(currentStep);
+</script>
+{% endif %}
 
 <script src="{% static 'js/simple-datatables.js' %}"></script>
 <script src="{% static 'js/dataTables.js'%}"></script>

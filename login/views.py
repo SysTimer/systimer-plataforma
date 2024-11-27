@@ -73,6 +73,7 @@ def validar_cadastro(request):
                 PES_NOME=pes_nome, 
                 PES_SOBRENOME=pes_sobrenome, 
                 PES_EMAIL=pes_email, 
+                PES_ADMINISTRADOR = 'S',
                 password=senha_codificada
             )
             usuario.save()
@@ -97,8 +98,11 @@ def validar_cadastro(request):
         
         pessoa_login = Pessoa.objects.filter(PES_EMAIL = pes_email, PES_NOME = pes_nome).first()
         usuario = auth.authenticate(request, username=pes_email, password=pes_senha)
-        return redirect('/plataforma')
+        
+        request.session['emp_cod'] = empresa.EMP_COD
+        request.session['cargo'] = cargo.CARGO_NOME
         auth.login(request, usuario)
+        return redirect('/plataforma/home/')
     except Exception as e:
         print('Exceção causada > ', e)
         return redirect('/auth/cadastro')

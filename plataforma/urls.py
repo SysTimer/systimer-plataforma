@@ -10,9 +10,14 @@ urlpatterns = [
     path("home/", views.renderizar_plataforma, name='renderizar_plataforma'),
     path('iniciar_tarefa/', views.iniciar_tarefa, name='iniciar_tarefa'),
     path('enviar_banco_horas/', views.enviar_banco_horas, name='enviar_banco_horas'),
-    path('atualizar_registro/', views.atualizar_registro, name='atualizar_registro'),
+    path('atualizar_registro/', views.atualizar_registro_reprovada, name='atualizar_registro'),
     path('renderizar_cadastro/', views.renderizar_cadastro, name='renderizar_cadastro'),
     path('get-projetos/', views.projetos_clientes, name='get_projetos'),
     path('novo_projeto/', views.novo_projeto, name='novo_projeto'),
     path("cadastrar_tarefa/", views.cadastrar_tarefa, name="cadastrar_tarefa"),
+    path("cadastrar_informacoes/", views.cadastrar_informacoes, name="cadastrar_informacoes"),
+    path("criar_cliente/", views.criar_cliente, name="criar_cliente"),
+    path("atualizar_registro_aprovada/", views.atualizar_registro_aprovada, name="atualizar_registro_aprovada"),
+    path("analisar/", views.exibir_grafico, name="analisar"),
+
 ]

@@ -5,8 +5,8 @@ from login.models import Empresa, Pessoa
 class EmpresaInfo(models.Model):
     EMI_COD = models.AutoField(primary_key=True)
     EMP_QUANTIDADE_FUNC = models.IntegerField()
-    EMP_OBJETIVO = models.CharField(max_length=100, blank=True, null=True)
-    EMP_COD = models.ForeignKey(Empresa, on_delete=models.CASCADE)
+    EMP_RAMO_ATUACAO = models.CharField(max_length=100, blank=True, null=True)
+    EMP_COD = models.ForeignKey(Empresa, unique=True, on_delete=models.CASCADE)
     DATA_CRIACAO = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -35,8 +35,6 @@ class Funcionario(models.Model):
 class Cliente(models.Model):
     CLI_COD = models.AutoField(primary_key=True)
     CLI_NOME = models.CharField(max_length=50, blank=False, null=False)
-    CLI_RAMO_ATUACAO = models.CharField(max_length=50, blank=True, null=True)
-    CLI_CNPJ = models.CharField(max_length=18, blank=True, null=True, unique=True)
     EMP_COD = models.ForeignKey(Empresa, on_delete=models.CASCADE)
 
     class Meta:
@@ -64,7 +62,7 @@ class Tarefas(models.Model):
     FUN_COD = models.ForeignKey(Funcionario, on_delete=models.CASCADE)  # Mudou aqui
     TRF_PRIORIDADE = models.ForeignKey(Prioridade, on_delete=models.CASCADE)
     TRF_DATA_CONCLUSAO = models.DateTimeField(blank=True, null=True)
-    TRF_STATUS = models.CharField(max_length=1, default='A')
+    TRF_STATUS = models.CharField(max_length=2, default='A')
     TRF_DATA_CRIACAO =  models.DateTimeField(auto_now=True)
     TRF_OBSERVACAO =  models.CharField(max_length=120, blank=True)
     class Meta:
@@ -77,7 +75,7 @@ class Horas_Trabalhadas(models.Model):
     HRT_DT_FIM = models.DateTimeField(blank=True, null=True)
     PES_COD = models.ForeignKey(Pessoa, on_delete=models.CASCADE)
     TRF_COD = models.ForeignKey(Tarefas, on_delete=models.CASCADE)
-    HRF_STATUS = models.CharField(max_length=1, default='A')
+    HRF_STATUS = models.CharField(max_length=2, default='A')
     class Meta:
         db_table = 'Horas_Trabalhadas' 
 
@@ -100,7 +98,7 @@ class EmpresaPessoaView(models.Model):
     UltimoAcesso = models.CharField(max_length=150)
 
     class Meta():
-        db_table = "EMPRESA_PESSOA_VI"
+        db_table = "SYS_LISTAR_EMPRESA_VI"
         managed = False
         
     
@@ -125,7 +123,7 @@ class SysDetalhesTarefasVi(models.Model):
     nome_tarefa = models.CharField(max_length=200)
     nome_cliente = models.CharField(max_length=50)
     prioridade = models.CharField(max_length=50)
-    total_horas_trabalhadas = models.DurationField() 
+    total_horas_trabalhadas = models.CharField(max_length=40) 
     trf_data_conclusao = models.CharField(max_length=10) 
     status = models.CharField(max_length=9)
     trf_data_criacao = models.CharField(max_length=10)  
@@ -137,3 +135,17 @@ class SysDetalhesTarefasVi(models.Model):
     class Meta:
         managed = False 
         db_table = 'SYS_DETALHES_TAREFAS_VI'  
+        
+        
+        
+class SysGraficosHorasVi(models.Model):
+    trf_titulo = models.CharField(max_length=255) 
+    data_inicio = models.CharField(max_length=10)
+    data_fim = models.CharField(max_length=10) 
+    total_trabalhado = models.TimeField() 
+    PES_COD_id = models.IntegerField()
+    TRF_COD_id = models.IntegerField(primary_key=True)
+
+    class Meta:
+        managed = False  # Indica que o Django não gerenciará essa tabela/view
+        db_table = 'SYS_GRAFICOS_HORAS_VI'  # Nome da view no banco de dados

@@ -26,7 +26,6 @@
 <form class="p-10" method="POSt" action="">
     {% csrf_token %}
     <div class="space-y-4">
-        <!-- Campo Título -->
         <div>
             <label for="id_titulo" class="block text-sm font-medium text-gray-700">Título</label>
             <input type="text" name="titulo" id="id_titulo" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
@@ -50,23 +49,28 @@
         </div>
 
         <div>
-            <label for="id_prioridade" class="block text-sm font-medium text-gray-700">Prioridade</label>
-            <select name="prioridade" id="id_prioridade" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
-                <option value="">Selecione a Prioridade</option>
-                {% for prioridade in prioridades %}
-                    <option value="{{ prioridade.PRI_COD }}">{{ prioridade.PRI_NOME }}</option>
-                {% endfor %}
-            </select>
-        </div>
 
-        <div>
-            <label for="id_funcionario" class="block text-sm font-medium text-gray-700">Funcionário</label>
-            <select name="funcionario" id="id_funcionario" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
-                <option value="">Selecione o Funcionário</option>
-                {% for funcionario in funcionarios %}
-                    <option value="{{ funcionario.FUN_COD }}">{{ funcionario.PES_COD }}</option> <!-- Assume que PES_COD é o nome da pessoa -->
-                {% endfor %}
-            </select>
+            <div>
+                <label for="id_funcionario" class="block text-sm font-medium text-gray-700">Funcionário</label>
+                <select name="funcionario" id="id_funcionario" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
+                    <option value="">Selecione o Funcionário</option>
+                    {% for funcionario in funcionarios %}
+                        <option value="{{ funcionario.FUN_COD }}">{{ funcionario.PES_COD }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+    
+            
+            <div>
+                <label for="id_prioridade" class="block text-sm font-medium text-gray-700">Prioridade</label>
+                <select name="prioridade" id="id_prioridade" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
+                    <option value="">Selecione a Prioridade</option>
+                    {% for prioridade in prioridades %}
+                        <option value="{{ prioridade.PRI_COD }}">{{ prioridade.PRI_NOME }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        
         </div>
 
         <div>
