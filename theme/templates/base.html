@@ -1,0 +1,222 @@
+{% load static tailwind_tags %}
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+  {% tailwind_css %}
+  <meta charset="UTF-8">
+
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  {% block titulo %}
+  <title>SysTimer - Principal
+  </title>
+  {% endblock %}
+</head>
+
+<body class="p-0">
+  <div class="h-screen" >
+
+    <div class="flex h-screen">
+
+      <aside id="sidebar" class="block md:hidden lg:block h-screen w-[280px]">
+        <div class="h-screen flex flex-col bg-custom-gray px-3 py-4 overflow-y-auto">
+          <div>
+                      <!-- Conteúdo do aside -->
+          <div class="h-[58px] flex justify-between items-center">
+            <div class="flex items-center">
+              <img src="{% static 'img/clock-hour-2.svg' %}" alt="Minha Imagem" class="text-blue-500">
+              <p class="ml-3 text-2xl font-bold">SysTimer</p>
+            </div>
+
+          </div>
+          <div class="mt-[30px]">
+            <ul class="space-y-2 font-medium">
+              <li>
+                <hr>
+
+                <span class="text-xs	 text-text-principal">Análise</span>
+
+                <a href="#"
+                  class="flex items-center p-2 rounded-lg text-white hover:bg-white hover:border hover:border-slate-200 hover:border-[2px] group">
+                  <i class="fa-solid fa-home text-[13px]	 font-bold text-slate-400 group-hover:text-blue-600"></i>
+                  <span class="ms-3 text-[13px]	 text-text-principal">Dashboard</span>
+                </a>
+                <a href="#"
+                  class="relative flex items-center  p-2 rounded-lg text-white hover:bg-white hover:border hover:border-slate-200 hover:border-[2px] group">
+                  <i class="fa-solid fa-inbox text-[13px] font-bold text-slate-400 group-hover:text-blue-600"></i>
+                  <span class="ms-3 text-[13px] text-text-principal">Caixa de Entrada</span>
+                  <div
+                    class="absolute flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full left-4 -top-1 -end-2 dark:border-gray-900">
+                    1</div>
+                </a>
+
+                <a href="#"
+                  class="flex items-center p-2 rounded-lg text-white hover:bg-white hover:border hover:border-slate-200 hover:border-[2px] group">
+                  <i class="fa-solid fa-rectangle-list text-[13px] font-bold text-slate-400 group-hover:text-blue-600"></i>
+                  <span class="ms-3 text-[13px] text-text-principal">Kanban Board</span>
+                </a>
+                <hr>
+                <span class="text-xs	 text-text-principal">Gerenciar</span>
+
+                <a href="#"
+                  class="flex items-center p-2 rounded-lg text-white hover:bg-white hover:border hover:border-slate-200 hover:border-[2px] group">
+                  <i class="fa-solid fa-list-check text-[13px] font-bold text-slate-400 group-hover:text-blue-600"></i>
+                  <span class="ms-3 text-[13px] text-text-principal">Tarefas</span>
+                </a>
+
+                <a href="#"
+                  class="flex items-center p-2 rounded-lg text-white hover:bg-white hover:border hover:border-slate-200 hover:border-[2px] group">
+                  <i class="fa-solid fa-folder text-[13px] font-bold text-slate-400 group-hover:text-blue-600"></i>
+                  <span class="ms-3 text-[13px] text-text-principal">Projetos</span>
+                </a>
+
+                <a href="#"
+                  class="flex items-center p-2 rounded-lg text-white hover:bg-white hover:border hover:border-slate-200 hover:border-[2px] group">
+                  <i class="fa-solid fa-user-plus text-[13px] font-bold text-slate-400 group-hover:text-blue-600"></i>
+                  <span class="ms-3 text-[13px] text-text-principal">Equipe</span>
+                </a>
+
+
+              </li>
+          </div >
+          </div>
+            <div class="mt-auto">
+              <div
+              class="flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800">
+              <div
+                class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-blue-500 bg-blue-100 rounded-lg dark:bg-blue-800 dark:text-blue-200">
+                <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-home"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12.707 2.293l9 9c.63 .63 .184 1.707 -.707 1.707h-1v6a3 3 0 0 1 -3 3h-1v-7a3 3 0 0 0 -2.824 -2.995l-.176 -.005h-2a3 3 0 0 0 -3 3v7h-1a3 3 0 0 1 -3 -3v-6h-1c-.89 0 -1.337 -1.077 -.707 -1.707l9 -9a1 1 0 0 1 1.414 0m.293 11.707a1 1 0 0 1 1 1v7h-4v-7a1 1 0 0 1 .883 -.993l.117 -.007z" /></svg>  
+              </div>
+              <div class="ms-3 text-[13px] font-bold">{{ empresa.EMP_NOME }}</div>
+  
+              <button type="button" id="deleteButton" data-modal-target="deleteModal" data-modal-toggle="deleteModal"
+                class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700">
+                <span class="sr-only">Close</span>
+                <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-selector"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 9l4 -4l4 4" /><path d="M16 15l-4 4l-4 -4" /></svg>              </button>
+  
+            </div>
+            </div>
+        </div>
+      </aside>
+<div id="deleteModal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-modal md:h-full">
+  <div class="relative p-4 w-full max-w-md h-full md:h-auto">
+      <div class="relative p-4 text-center bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+          <button type="button" class="text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-[13px] p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="deleteModal">
+              <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+              <span class="sr-only">Close modal</span>
+          </button>
+
+          <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="text-gray-400 dark:text-gray-500 w-11 h-11 mb-3.5 mx-auto"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2" /><path d="M19 12h2l-9 -9l-9 9h2v7a2 2 0 0 0 2 2h5.5" /><path d="M16 19h6" /><path d="M19 16l3 3l-3 3" /></svg>
+
+          <p class="mb-4 text-gray-500 dark:text-gray-300">Realmente deseja trocar de Empresa?</p>
+          <div class="flex justify-center items-center space-x-4">
+              <button data-modal-toggle="deleteModal" type="button" class="py-2 px-3 text-[13px] font-medium text-gray-500 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
+                Não, cancelar
+
+              </button>
+              <a href="/plataforma" class="py-2 px-3 text-[13px] font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-900">
+                Sim, tenho certeza
+
+              </a>
+          </div>
+      </div>
+  </div>
+</div>
+
+
+
+      <main class="flex-1 ">
+
+        <div>
+          <nav class="bg-white border-b-2">
+            <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+              <div class="relative flex h-16 items-center justify-between">
+                <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
+                  <!-- Mobile menu button-->
+                  <button type="button"
+                    class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+                    aria-controls="mobile-menu" aria-expanded="false">
+                    <span class="absolute -inset-0.5"></span>
+                    <span class="sr-only">Open main menu</span>
+
+                    <svg class="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                      aria-hidden="true" data-slot="icon">
+                      <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                    </svg>
+                    <svg class="hidden h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                      aria-hidden="true" data-slot="icon">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+                <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+                  <button id="btnHamburuger" class="hidden md:block lg:hidden no-underline">
+                    <i class="fa-solid fa-bars text-3xl"></i>
+                  </button>
+
+                </div>
+                <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+                  <button type="button"
+                    class="relative rounded-full bg-blue-600  p-1 text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                    <span class="absolute -inset-1.5"></span>
+                    <span class="sr-only">View notifications</span>
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                      aria-hidden="true" data-slot="icon">
+                      <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
+                    </svg>
+                  </button>
+
+                  <div class="relative ml-3">
+                    <div>
+                      <button id="foto_perfil" type="button"
+                        class="relative flex rounded-full bg-blue-600 text-[13px] focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                        id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                        <img class="h-8 w-8 rounded-full"
+                          src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                          alt="">
+                      </button>
+                    </div>
+                    <div id="menu"
+                      class="hidden absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                      role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+                      <!-- Active: "bg-gray-100 outline-none", Not Active: "" -->
+                      <a href="#" class="block px-4 py-2 text-[13px] text-gray-700" role="menuitem" tabindex="-1"
+                        id="user-menu-item-0">Meu Perfil</a>
+                      <a href="#" class="block px-4 py-2 text-[13px] text-gray-700" role="menuitem" tabindex="-1"
+                        id="user-menu-item-1">Configurações</a>
+                      <a href="{% url 'sair' %}" class="block px-4 py-2 text-[13px] text-gray-700" role="menuitem"
+                        tabindex="-1" id="user-menu-item-2">Sair</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </nav>
+        </div>
+
+
+        <div id="conteudo" class="">
+
+          {% block conteudo %}
+          {% endblock %}
+        </div>
+
+      </main>
+    </div>
+  </div>
+  <script src="{% static 'js/base.js'%}"></script>
+  <script src="{% static 'dist/flowbite.min.js' %}"></script>
+
+</body>
+
+</html>

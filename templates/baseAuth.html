@@ -1,0 +1,22 @@
+{% load static %}
+{% load static tailwind_tags %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+   
+   {% tailwind_css %}
+   <link rel="stylesheet" href="{% static 'style.css' %}">
+
+    {% block titulo %}
+        <title>SysTimer - Autenticação</title>
+    {% endblock %}
+</head>
+<body>
+    {% block conteudo %}
+    {% endblock %}
+
+</body>
+<script src="{% static "js/auth.js" %}"></script>
+
+</html>
