@@ -126,9 +126,18 @@ NPM_BIN_PATH = 'C:/Program Files/nodejs/npm.cmd'
 #Django Message
 
 MESSAGE_TAGS = {
+<<<<<<< HEAD
     constants.DEBUG: 'bg-gray-100 text-gray-800 border-gray-300',
     constants.INFO: 'bg-blue-100 text-blue-800 border-blue-300',
     constants.SUCCESS: 'bg-green-100 text-green-800 border-green-300',
     constants.WARNING: 'bg-yellow-100 text-yellow-800 border-yellow-300',
     constants.ERROR: 'bg-red-100 text-red-800 border-red-300',
 }
+=======
+    constants.DEBUG: '',
+    constants.INFO: '',
+    constants.SUCCESS: '',
+    constants.WARNING: '',
+    constants.ERROR: '',
+}
+>>>>>>> f1d7f99837b26e846080b2ea7fcb1fb9c5c24667
