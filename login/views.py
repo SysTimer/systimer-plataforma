@@ -8,16 +8,14 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
 import secrets
 from plataforma.models import Funcionario, Cargo
-
 from django.http import HttpResponse
 from django.utils import timezone
-
 from datetime import datetime, timedelta
 
 User = get_user_model()
 
 def login(request):
-    
+    messages.add_message(request, constants.INFO, 'Bem-vindo ao sistema!')
     if request.user.is_authenticated:
         return redirect('/plataforma')
     

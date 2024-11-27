@@ -345,7 +345,6 @@ def novo_projeto(request):
     return render (request, 'novo_projeto.html', retorno)
 
 
-
 @login_required
 def cadastrar_informacoes(request):
     tamanho = request.POST.get('tamanho')
@@ -403,3 +402,64 @@ def criar_cliente(request):
         return redirect('/plataforma/projeto/')
     
 
+
+@login_required
+def editar_usuario(request):
+    pes_cod = request.user.PES_COD
+    pessoa = Pessoa.objects.filter(PES_COD=pes_cod).first()
+
+    if pessoa:
+        if request.method == 'POST':
+            nome = request.POST.get('nome')
+            sobrenome = request.POST.get('sobrenome')
+            email = request.POST.get('email')
+            foto = request.FILES.get('foto')
+            senha = request.POST.get('senha')
+            cargo = request.POST.get('cargo')
+
+            pessoa.PES_NOME = nome
+            pessoa.PES_SOBRENOME = sobrenome
+            pessoa.PES_EMAIL = email
+
+            if foto:
+                pessoa.foto = foto
+            if senha:
+                pessoa.set_password(senha)
+            pessoa.cargo = cargo
+
+            pessoa.save()
+
+            return redirect('perfil_usuario')
+
+        return render(request, 'editar_usuario.html', {'pessoa': pessoa})
+
+    return redirect('login')
+
+    
+@login_required    
+def salvar_perfil(request):
+    
+    pes_cod = request.user.PES_COD
+    
+    
+    pessoa = Pessoa.objects.filter(PES_COD=pes_cod).first()
+    
+    if pessoa:
+        
+        if request.method == 'POST':
+            novo_nome = request.POST.get('nome')
+            novo_sobrenome = request.POST.get('sobrenome')
+            
+            pessoa.nome = novo_nome
+            pessoa.sobrenome = novo_sobrenome
+        
+            pessoa.save()
+            
+            
+            return redirect('perfil')  
+        else:
+            
+            return render(request, 'editar_usuario.html', {'pessoa': pessoa})
+    else:
+        
+        return redirect('login')

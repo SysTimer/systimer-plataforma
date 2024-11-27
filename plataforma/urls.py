@@ -19,5 +19,6 @@ urlpatterns = [
     path("criar_cliente/", views.criar_cliente, name="criar_cliente"),
     path("atualizar_registro_aprovada/", views.atualizar_registro_aprovada, name="atualizar_registro_aprovada"),
     path("analisar/", views.exibir_grafico, name="analisar"),
-
+    path('editar_usuario/', views.editar_usuario, name='editar_usuario'),
+    path('salvar_perfil/', views.salvar_perfil, name='salvar_perfil'),
 ]

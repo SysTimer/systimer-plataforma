@@ -6,6 +6,41 @@
 {% endblock %}
 
 {% block conteudo %}
+{% if messages %}
+    <div class="fixed top-4 left-1/2 transform -translate-x-1/2 space-y-4 w-[90%] md:w-[60%]">
+        {% for message in messages %}
+            <div class="flex items-center justify-between p-4 rounded-lg shadow-lg {{ message.tags }} border relative">
+                <div class="flex items-center">
+                    <!-- Ícone -->
+                    <div class="mr-4">
+                        {% if message.level == constants.INFO %}
+                            <i class="fa-solid fa-circle-info text-blue-600 text-xl"></i>
+                        {% elif message.level == constants.SUCCESS %}
+                            <i class="fa-solid fa-check-circle text-green-600 text-xl"></i>
+                        {% elif message.level == constants.WARNING %}
+                            <i class="fa-solid fa-exclamation-circle text-yellow-600 text-xl"></i>
+                        {% elif message.level == constants.ERROR %}
+                            <i class="fa-solid fa-exclamation-triangle text-red-600 text-xl"></i>
+                        {% endif %}
+                    </div>
+
+                    <!-- Mensagem -->
+                    <div class="text-sm">
+                        <span class="font-semibold">{{ message }}</span>
+                        <p class="text-xs text-gray-500">Faça login para acessar o sistema.</p>
+                    </div>
+                </div>
+
+                <!-- Botão Fechar (X) -->
+                <button type="button" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 focus:outline-none" onclick="this.parentElement.remove()">
+                    <i class="fa-solid fa-times text-lg">x</i>
+                </button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+
 <div class="container mx-auto  h-screen flex flex-col md:flex-row">
     <div class="w-full md:w-1/2 h-full flex items-center justify-center">
         <div class="bg-blue-500 rounded-xl w-5/6 h-5/6 block lg:block sm:hidden">

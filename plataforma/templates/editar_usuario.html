@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+    <title>SysTimer - Editar Usuário</title>
+{% endblock %}
+
+{% block conteudo %}
+<div class="min-h-screen flex items-center justify-center bg-gray-100 py-12 px-6">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Editar Usuário</h2>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <!-- Nome -->
+            <div class="mb-4">
+                <label for="nome" class="block text-sm font-medium text-gray-700">Nome</label>
+                <input type="text" id="nome" name="nome" class="mt-1 block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Digite seu nome" value="{{ pessoa.PES_NOME }}">
+            </div>
+
+            <!-- Sobrenome -->
+            <div class="mb-4">
+                <label for="sobrenome" class="block text-sm font-medium text-gray-700">Sobrenome</label>
+                <input type="text" id="sobrenome" name="sobrenome" class="mt-1 block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Digite seu sobrenome" value="{{ pessoa.PES_SOBRENOME }}">
+            </div>
+
+            <!-- Email -->
+            <div class="mb-4">
+                <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                <input type="email" id="email" name="email" class="mt-1 block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Digite seu email" value="{{ pessoa.PES_EMAIL}}">
+            </div>
+
+            <!-- Foto -->
+            <div class="mb-4">
+                <label for="foto" class="block text-sm font-medium text-gray-700">Foto</label>
+                <input type="file" id="foto" name="foto" class="mt-1 block w-full text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border file:border-gray-300 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                {% if pessoa.foto %}
+                    <div class="mt-2">
+                        <img src="{{ pessoa.foto.url }}" alt="Foto do usuário" class="w-24 h-24 object-cover rounded-full">
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Senha -->
+            <div class="mb-4">
+                <label for="senha" class="block text-sm font-medium text-gray-700">Senha</label>
+                <input type="password" id="senha" name="senha" class="mt-1 block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Digite sua nova senha">
+            </div>
+
+            
+
+            <!-- Cargo --> 
+            <div class="mb-4">
+                <label for="cargo" class="block text-sm font-medium text-gray-700">Cargo</label>
+                <select id="cargo" name="cargo" class="mt-1 block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <option value="Administrador" {% if pessoa.cargo == 'Administrador' %}selected{% endif %}>Administrador</option>
+                    <option value="Usuário" {% if pessoa.cargo == 'Usuário' %}selected{% endif %}>Usuário</option>
+                    <option value="Gerente" {% if pessoa.cargo == 'Gerente' %}selected{% endif %}>Gerente</option>
+                </select>
+            </div>
+
+            <!-- Botão de enviar -->
+            <div class="mt-6">
+                <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Salvar Alterações</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
