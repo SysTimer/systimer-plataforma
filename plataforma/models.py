@@ -44,7 +44,8 @@ class Projeto(models.Model):
     PJT_COD = models.AutoField(primary_key=True)
     PJT_NOME = models.CharField(max_length=150)
     CLI_COD = models.ForeignKey(Cliente, on_delete=models.CASCADE)
-
+    PJT_VLR_HORA = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    PJT_OBSERVACAO = models.CharField(max_length=300)
     class Meta:
         db_table = 'Projeto' 
 

@@ -398,8 +398,8 @@ def criar_cliente(request):
     
     if '/plataforma/renderizar_cadastro/' in referer_url:
         return redirect('/plataforma/renderizar_cadastro/')
-    elif '/plataforma/projeto/' in referer_url:
-        return redirect('/plataforma/projeto/')
+    elif '/plataforma/novo_projeto/' in referer_url:
+        return redirect('/plataforma/novo_projeto/')
     
 
 
@@ -463,3 +463,46 @@ def salvar_perfil(request):
     else:
         
         return redirect('login')
+
+@login_required
+def criar_projeto(request):
+    cliente = request.POST.get('cliente')
+    nome_projeto = request.POST.get('nome_projeto')     
+    valor_hora = request.POST.get('valor_hora')
+    notas = request.POST.get('notas')
+    print(request.POST)
+    if not cliente or not nome_projeto or not valor_hora:
+            print("Erro: Todos os campos obrigatórios devem ser preenchidos!")
+            return redirect('/plataforma/novo_projeto/')
+
+    cliente_instancia = Cliente.objects.filter(CLI_COD = cliente).first()
+    if cliente_instancia: 
+        try:
+            projeto_instancia = Projeto(PJT_NOME = nome_projeto, CLI_COD = cliente_instancia, PJT_VLR_HORA = valor_hora, PJT_OBSERVACAO = notas)
+            projeto_instancia.save()  
+            return redirect('/plataforma/novo_projeto/')
+        except Exception as e:
+            print(e)
+            return redirect('/plataforma/novo_projeto/')
+
+    else:
+        print("Erro interno: Não foi possível inserir esse projeto no cleinte atual.")
+        return redirect('/plataforma/novo_projeto/')
+
+
+@login_required
+def listar_projeto(request):
+    
+    # Agrupar os projetos por cliente
+    projetos_com_clientes = Projeto.objects.select_related('CLI_COD').values('CLI_COD__CLI_NOME').distinct()
+    projetos_por_cliente = {}
+
+    for cliente in projetos_com_clientes:
+        cli_nome = cliente['CLI_COD__CLI_NOME']
+        projetos_por_cliente[cli_nome] = Projeto.objects.filter(CLI_COD__CLI_NOME=cli_nome).values('PJT_NOME')
+
+    retorno = {
+        "projetos_por_cliente": projetos_por_cliente
+    }
+
+    return render(request, 'projeto.html', retorno)

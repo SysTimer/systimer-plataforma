@@ -12,7 +12,6 @@ urlpatterns = [
     path('enviar_banco_horas/', views.enviar_banco_horas, name='enviar_banco_horas'),
     path('atualizar_registro/', views.atualizar_registro_reprovada, name='atualizar_registro'),
     path('renderizar_cadastro/', views.renderizar_cadastro, name='renderizar_cadastro'),
-    path('get-projetos/', views.projetos_clientes, name='get_projetos'),
     path('novo_projeto/', views.novo_projeto, name='novo_projeto'),
     path("cadastrar_tarefa/", views.cadastrar_tarefa, name="cadastrar_tarefa"),
     path("cadastrar_informacoes/", views.cadastrar_informacoes, name="cadastrar_informacoes"),
@@ -21,4 +20,6 @@ urlpatterns = [
     path("analisar/", views.exibir_grafico, name="analisar"),
     path('editar_usuario/', views.editar_usuario, name='editar_usuario'),
     path('salvar_perfil/', views.salvar_perfil, name='salvar_perfil'),
+    path('cadastrar_projeto', views.criar_projeto, name='cadastrar_projeto'),
+    path('projetos/', views.listar_projeto, name='projetos')
 ]
