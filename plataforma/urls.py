@@ -21,5 +21,9 @@ urlpatterns = [
     path('editar_usuario/', views.editar_usuario, name='editar_usuario'),
     path('salvar_perfil/', views.salvar_perfil, name='salvar_perfil'),
     path('cadastrar_projeto', views.criar_projeto, name='cadastrar_projeto'),
-    path('projetos/', views.listar_projeto, name='projetos')
+    path('projetos/', views.listar_projeto, name='projetos'),
+    path('equipe/', views.renderizar_equipe, name='equipe'),
+    path('cadastrar_funcionario/', views.cadastrar_funcionario, name='cadastrar_funcionario'),
+    path('get-projetos/', views.projetos_clientes, name='get_projetos'),
+
 ]

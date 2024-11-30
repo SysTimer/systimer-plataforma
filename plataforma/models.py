@@ -16,7 +16,7 @@ class Cargo(models.Model):
     CARGO_COD = models.AutoField(primary_key=True)
     CARGO_NOME = models.CharField(max_length=60, unique=True)
     CARGO_DT_ATUALIZACAO = models.DateTimeField(default=timezone.now)
-
+    EMP_COD = models.ForeignKey(Empresa, on_delete=models.CASCADE)
     class Meta:
         db_table = 'Cargo' 
 
@@ -148,5 +148,21 @@ class SysGraficosHorasVi(models.Model):
     TRF_COD_id = models.IntegerField(primary_key=True)
 
     class Meta:
-        managed = False  # Indica que o Django não gerenciará essa tabela/view
-        db_table = 'SYS_GRAFICOS_HORAS_VI'  # Nome da view no banco de dados
+        managed = False  
+        db_table = 'SYS_GRAFICOS_HORAS_VI'
+        
+        
+    
+class SysEquipeVi(models.Model):
+    pes_nome = models.CharField(max_length=255)
+    pes_email = models.EmailField()
+    cargo_nome = models.CharField(max_length=255)
+    trabalho = models.BooleanField()
+    pes_foto_url = models.URLField(max_length=500, null=True, blank=True)
+    pes_cod = models.BigIntegerField()
+    fun_cod = models.BigIntegerField()
+    emp_cod_id = models.BigIntegerField()
+
+    class Meta:
+        managed = False 
+        db_table = 'SYS_EQUIPE_VI'

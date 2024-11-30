@@ -1,0 +1,233 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block titulo %}
+
+<title>SysTimer - Home</title>
+{% endblock %}
+
+{% block conteudo %}
+<form method="POST" action="{% url 'equipe'%}">
+    <div class="h-[80px] flex items-center justify-between w-full p-5">
+        <div class="flex items-center  w-full justify-between p-1rounded-xl">
+            <div>
+                <div class="text-[10px] flex items-center  font-semibold text-neutral-400">
+                    <a class="flex items-center mb-2" href="{% url 'renderizar_plataforma' %}">
+                        <i class="fa-solid fa-chevron-left font-bold text-xs"></i>
+                        <span class="ml-2 text-xs"> Retornar Acompanhamento Equipe</span>
+                    </a>
+                </div>
+                <div>
+                    <span class="text-2xl font-semibold">
+                        Cadastrar Novo Membro
+                    </span>
+                </div>
+                <span class="text-sm">Enviaremos um convite por e-mail para essa pessoa se juntar à sua equipe.</span>
+
+            </div>
+
+            <div class="flex p-3 items-center">
+                <button type="submit"
+                    class="flex justify-centeri bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-send"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 14l11 -11" /><path d="M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5" /></svg>
+                    Enviar Convite
+                </button>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div>
+</div>
+
+
+    {% csrf_token %}
+<div class="w-full flex justify-center items-center">
+
+
+    <div class="p-4 space-y-4 w-[80%] flex flex-col ">
+        <div class="flex">
+            <div class="w-[50%]">
+                <label for="id_titulo" class="block text-sm font-medium text-gray-700">Primeiro Nome</label>
+                <input type="text" name="titulo" id="id_titulo"
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    placeholder="Digite o título da Tarefa" required>
+            </div>
+            
+            <div class="w-[50%] ml-10">
+                <label for="id_titulo" class="block text-sm font-medium text-gray-700">Sobrenome</label>
+                <input type="text" name="titulo" id="id_titulo"
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    placeholder="Digite o título da Tarefa" required>
+            </div>
+        </div>
+
+        <h3 class="mb-5 text-lg font-medium text-gray-900 dark:text-white">Tipo: </h3>
+<ul class="grid w-full gap-6 md:grid-cols-2">
+    <li class="w-full">
+        <input type="radio" id="react-option" name="user-type" value="funcionario" class="hidden peer" required>
+        <label for="react-option" class="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-blue-600 hover:text-gray-600 dark:peer-checked:text-gray-300 peer-checked:text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+            <div class="block">
+                <div class="w-full text-lg font-semibold">Funcionário</div>
+                <div class="w-full text-sm">Permissões de iniciar tarefa e apenas visualizar</div>
+            </div>
+        </label>
+    </li>
+    <li class="w-full">
+        <input type="radio" id="admin-option" name="user-type" value="administrador" class="hidden peer">
+        <label for="admin-option" class="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-blue-600 hover:text-gray-600 dark:peer-checked:text-gray-300 peer-checked:text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+            <div class="block">
+                <div class="w-full text-lg font-semibold">Administrador</div>
+                <div class="w-full text-sm">Permissão de criar novos clientes, projetos e acesso a dashboard</div>
+            </div>
+        </label>
+    </li>
+</ul>
+
+
+        <div class="flex w-full ">
+            <div class="flex w-full items-center mr-10">
+                <div  class="w-full mr-2">
+                    <label for="id_cliente" class="block text-sm font-medium text-gray-700">Cargo</label>
+                    <select name="cliente" id="id_cliente"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        onchange="filtrarProjetos()" required>
+                        <option value="">Selecione um Cliente</option>
+                        {% for cliente in clientes %}
+                        <option value="{{ cliente.CLI_COD }}">{{ cliente.CLI_NOME }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="w-[30%] mt-5 ">
+                    <span>ou</span>
+                    <button type="button" data-modal-target="crud-modal" data-modal-toggle="crud-modal"
+                        class="ml-4 bg-blue-500 text-white px-3 py-2 rounded-lg hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 dark:bg-blue-700 dark:hover:bg-blue-800 dark:focus:ring-blue-900">
+                        + Cargos
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex">
+
+
+
+            <div class="w-[50%]  mr-10">
+                <label for="id_funcionario" class="block text-sm font-medium text-gray-700">Responsável</label>
+
+                {% if cargo == 'Administrador'%}
+                <select name="funcionario" id="id_funcionario"
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    required>
+                    {% for funcionario in funcionarios %}
+                    <option value="{{ funcionario.FUN_COD }}">
+                        {{ funcionario.PES_COD.PES_NOME }} {{ funcionario.PES_COD.PES_SOBRENOME }}</option>
+                    {% endfor %}
+                </select>
+                {% else %}
+                <select  name="funcionario" id="id_funcionario"
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    required>
+                    {% for funcionario in funcionarios %}
+                    <option  value="{{ funcionario.FUN_COD }}">
+                        {{ funcionario.PES_COD.PES_NOME }}  {{ funcionario.PES_COD.PES_SOBRENOME }}
+                    </option>
+                    {% endfor %}
+                </select>
+                {% endif %}
+            </div>
+
+            <div class="w-[50%]">
+                <label for="id_prioridade" class="block text-sm font-medium text-gray-700">Prioridade</label>
+                <select name="prioridade" id="id_prioridade"
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    required>
+                    <option  value="">Selecione a Prioridade</option>
+                    {% for prioridade in prioridades %}
+                    <option name="funcionario" value="{{ prioridade.PRI_COD }}">{{ prioridade.PRI_NOME }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+
+        </div>
+
+        <div>
+            <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Observação</label>
+            <textarea id="message" name="obs" rows="4" maxlength="150"
+                class="block p-2.5 w-full h-[200px] resize-none length text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="Digite a observação que deseja da sua tarefa..."></textarea>
+        </div>
+
+    </div>
+
+    
+</div>
+</form>
+
+
+<div id="crud-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed inset-0 z-50 flex justify-center items-center w-full h-full bg-black bg-opacity-50">    <div class="relative p-4 w-full max-w-md max-h-full">
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                    Novo Cliente
+                </h3>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="crud-modal">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <form class="p-4 md:p-5" method="POST" action="{% url 'criar_cliente' %}">
+                {% csrf_token %}
+                <div class="grid gap-4 mb-4 grid-cols-2">
+                    <div class="col-span-2">
+                        <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nome Cliente</label>
+                        <input type="text" name="nome_cliente" id="nome_cliente" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Nome do Cliente" required="">
+                    </div>
+
+                </div>
+                <button type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
+                    Adicionar Cliente
+                </button>
+            </form>
+        </div>
+    </div>
+</div> 
+
+
+<script src="{% static '/js/editor.js' %}" type="module" defer></script>
+
+<script>
+
+    function filtrarProjetos() {
+        const clienteSelecionado = document.getElementById('id_cliente').value;
+        const projetoSelect = document.getElementById('id_projeto');
+
+        projetoSelect.innerHTML = '<option value="">Selecione um Projeto</option>';
+
+        if (clienteSelecionado) {
+            fetch(`/plataforma/get-projetos/?cliente_cod=${clienteSelecionado}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.projetos) {
+                        data.projetos.forEach(projeto => {
+                            const option = document.createElement('option');
+                            option.value = projeto.PJT_COD;
+                            option.textContent = projeto.PJT_NOME;
+                            projetoSelect.appendChild(option);
+                        });
+                    } else {
+                        alert('Nenhum projeto encontrado para este cliente.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao buscar projetos:', error);
+                });
+        }
+    }
+</script>
+
+{% endblock %}

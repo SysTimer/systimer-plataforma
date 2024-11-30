@@ -27,7 +27,8 @@ class Pessoa(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     password = models.CharField(max_length=100, null=False) 
-
+    PES_FOTO_URL = models.CharField(max_length=1000)
+    PES_FOTO_REFERENCIA = models.CharField(max_length=500)
     USERNAME_FIELD = 'PES_EMAIL'
     REQUIRED_FIELDS = ['PES_NOME', 'PES_SOBRENOME'] 
     objects = PessoaManager()

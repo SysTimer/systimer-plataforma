@@ -1,7 +1,11 @@
-{% extends 'base.html' %} {% load static %} {% block titulo %}
+{% extends 'base.html' %} 
+{% load static %}
+ {% block titulo %}
 <title>SysTimer - Projeto</title>
 
-{% endblock %} {% block conteudo %}
+{% endblock %} 
+
+{% block conteudo %}
 
 <div class="h-[80px] flex items-center justify-between w-full p-5">
     <div class="flex items-center  w-full justify-between p-1rounded-xl">
@@ -17,8 +21,7 @@
         </div>
 
         <div class="flex p-3 items-center">
-            <a href="{% url 'novo_projeto'  %}"
-                class="flex justify-centeri bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+            <a href="{% url 'novo_projeto'  %}" class="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                     class="icon icon-tabler icons-tabler-outline icon-tabler-plus">

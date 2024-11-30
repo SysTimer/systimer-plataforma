@@ -55,8 +55,5 @@ module.exports = {
         require('@tailwindcss/typography'),
         require('@tailwindcss/aspect-ratio'),
         require('flowbite-typography'),
-        require('flowbite/plugin')({
-          datatables: true,
-      }),
     ],
 }

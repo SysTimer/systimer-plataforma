@@ -2,7 +2,7 @@ import datetime
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
-from .models import Projeto, EmpresaPessoaView, Empresa, Pessoa, HorasTarefasVI, Tarefas,  Horas_Trabalhadas, Cliente, SysDetalhesTarefasVi,Horas_Reprovadas, Prioridade, Funcionario, Projeto, Cliente, EmpresaInfo,SysGraficosHorasVi
+from .models import Projeto, EmpresaPessoaView, Empresa, Pessoa, HorasTarefasVI, Tarefas,  Horas_Trabalhadas, Cliente, SysDetalhesTarefasVi,Horas_Reprovadas, Prioridade, Funcionario, Projeto, Cliente, EmpresaInfo,SysGraficosHorasVi,SysEquipeVi
 
 from login.models import LoginAuditoria
 from django.http import JsonResponse, HttpResponse
@@ -506,3 +506,21 @@ def listar_projeto(request):
     }
 
     return render(request, 'projeto.html', retorno)
+
+
+def renderizar_equipe(request):
+
+    emp_cod = request.session.get('emp_cod')
+
+    equipe = SysEquipeVi.objects.filter(emp_cod_id = emp_cod)
+    
+    retorno = {
+       "equipe": equipe,
+       "existe":  equipe.exists()     
+    }
+    
+
+    return render(request, 'equipe.html', retorno)
+
+def cadastrar_funcionario(request):
+    return render(request, 'funcionario_novo.html')
