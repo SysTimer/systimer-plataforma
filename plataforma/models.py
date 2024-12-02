@@ -201,3 +201,18 @@ class FaturasPrevistaVI(models.Model):
     class Meta:
         managed = False  
         db_table = 'SYS_FATURAS_PREVISTA_VI'
+        
+        
+class Invoice(models.Model):
+    INV_ID = models.AutoField(primary_key=True)
+    CLI_COD = models.ForeignKey(Cliente, on_delete=models.CASCADE)
+    EMP_COD = models.ForeignKey(Empresa,  on_delete=models.CASCADE)
+    FUN_COD = models.ForeignKey(Funcionario, on_delete=models.CASCADE)
+    DATA_EMISSAO = models.DateTimeField(auto_now_add=True)
+    TOTAL_HORAS = models.DecimalField(max_digits=10, decimal_places=2)
+    TOTAL_VALOR = models.DecimalField(max_digits=10, decimal_places=2)
+    STATUS = models.CharField(max_length=10)
+
+    class Meta:
+        db_table = 'invoice'
+       

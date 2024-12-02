@@ -32,5 +32,6 @@ urlpatterns = [
     path('dados_graficos/', views.dados_graficos, name='dados_graficos'),
     path('aprovar_hora/', views.aprovar_hora, name='aprovar_hora'),
     path('reprovar_hora/', views.reprovar_hora, name='reprovar_hora'),
+    path('invoices/', views.invoices, name='invoices'),
 
 ]

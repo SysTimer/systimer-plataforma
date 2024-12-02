@@ -2,7 +2,7 @@ import datetime
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
-from .models import Horas_Aprovadas, Projeto, EmpresaPessoaView, Empresa, Pessoa, HorasTarefasVI, Tarefas, Horas_Trabalhadas,FaturasPrevistaVI, Cliente, SysDetalhesTarefasVi,Horas_Reprovadas, Prioridade, Funcionario, Projeto, Cliente, EmpresaInfo,SysGraficosHorasVi,SysEquipeVi, Cargo
+from .models import Horas_Aprovadas, Projeto, EmpresaPessoaView, Empresa, Invoice, Pessoa, HorasTarefasVI, Tarefas, Horas_Trabalhadas,FaturasPrevistaVI, Cliente, SysDetalhesTarefasVi,Horas_Reprovadas, Prioridade, Funcionario, Projeto, Cliente, EmpresaInfo,SysGraficosHorasVi,SysEquipeVi, Cargo
 from login.models import LoginAuditoria
 from django.http import JsonResponse, HttpResponse
 from django.contrib import messages
@@ -760,3 +760,34 @@ def reprovar_hora(request):
         except Exception as e:
             print(e)
             return JsonResponse({'error': str(e)}, status=400)
+        
+        
+@login_required(login_url='/auth/login/')
+def invoices(request):
+    return render(request, 'invoice.html')
+
+
+def criar_invoice(request):
+    if request.method == 'POST':
+        cliente_id = request.POST['cliente']
+        funcionario_id = request.POST['funcionario']
+        data_inicio = request.POST['dataInicio']
+        data_fim = request.POST['dataFim']
+
+        horas = Horas_Aprovadas.objects.filter(
+            funcionario_id=funcionario_id,
+            data__range=[data_inicio, data_fim]
+        )
+
+        total_horas = sum(h.horas for h in horas)
+        valor_hora = Funcionario.objects.get(id=funcionario_id).valor_hora
+        total_valor = total_horas * valor_hora
+
+        invoice = Invoice.objects.create(
+            CLI_COD=cliente_id,
+            funcionario_id=funcionario_id,
+            total_horas=total_horas,
+            total_valor=total_valor
+        )
+        return JsonResponse({'status': 'success', 'invoice_id': invoice.id})
+    return render(request, 'criar_invoice.html')
