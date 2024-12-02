@@ -8,7 +8,9 @@ from django.http import JsonResponse, HttpResponse
 from django.contrib import messages
 from django.utils.crypto import get_random_string
 from django.db.models import Q
-
+from reportlab.lib.pagesizes import A4
+from reportlab.pdfgen import canvas
+from reportlab.lib import colors
 
 @login_required()
 def response(request):
@@ -791,3 +793,53 @@ def criar_invoice(request):
         )
         return JsonResponse({'status': 'success', 'invoice_id': invoice.id})
     return render(request, 'criar_invoice.html')
+
+
+
+def gerar_relatorio_invoices(caminho='relatorio_invoices.pdf'):
+    pdf = canvas.Canvas(caminho, pagesize=A4)
+    largura, altura = A4
+    y = altura - 50
+
+    pdf.setFont("Helvetica-Bold", 16)
+    pdf.drawString(50, y, "Relatório de Invoices")
+    pdf.setFont("Helvetica", 10)
+    pdf.drawString(50, y - 20, f"Gerado em: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")
+    y -= 50
+
+    pdf.setFont("Helvetica-Bold", 12)
+    pdf.drawString(50, y, "ID")
+    pdf.drawString(100, y, "Cliente")
+    pdf.drawString(200, y, "Funcionário")
+    pdf.drawString(300, y, "Data Emissão")
+    pdf.drawString(400, y, "Total Horas")
+    pdf.drawString(500, y, "Total Valor")
+    y -= 20
+    pdf.line(50, y + 10, largura - 50, y + 10)
+    y -= 10
+
+    pdf.setFont("Helvetica", 10)
+    invoices = Invoice.objects.all().select_related('CLIENTE', 'FUNCIONARIO') 
+    for invoice in invoices:
+        if y < 100:  
+            pdf.showPage()
+            pdf.setFont("Helvetica", 10)
+            y = altura - 50
+
+        pdf.drawString(50, y, str(invoice.INV_ID))
+        pdf.drawString(100, y, invoice.CLIENTE.nome if invoice.CLIENTE else "N/A")
+        pdf.drawString(200, y, invoice.FUNCIONARIO.nome if invoice.FUNCIONARIO else "N/A")
+        pdf.drawString(300, y, invoice.DATA_EMISSAO.strftime('%d/%m/%Y'))
+        pdf.drawString(400, y, f"{invoice.TOTAL_HORAS:.2f}")
+        pdf.drawString(500, y, f"R$ {invoice.TOTAL_VALOR:.2f}")
+        y -= 20
+
+    total_valor = invoices.aggregate(Sum('TOTAL_VALOR'))['TOTAL_VALOR__sum'] or 0
+    pdf.line(50, y, largura - 50, y)
+    y -= 20
+    pdf.setFont("Helvetica-Bold", 12)
+    pdf.drawString(50, y, f"Total Geral: R$ {total_valor:.2f}")
+
+    pdf.save()
+
+    print(f"Relatório gerado com sucesso em {caminho}")
