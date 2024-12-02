@@ -1,12 +1,13 @@
 import datetime
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
-from .models import Projeto, EmpresaPessoaView, Empresa, Pessoa, HorasTarefasVI, Tarefas,  Horas_Trabalhadas, Cliente, SysDetalhesTarefasVi,Horas_Reprovadas, Prioridade, Funcionario, Projeto, Cliente, EmpresaInfo,SysGraficosHorasVi,SysEquipeVi
-
+from .models import Horas_Aprovadas, Projeto, EmpresaPessoaView, Empresa, Pessoa, HorasTarefasVI, Tarefas, Horas_Trabalhadas,FaturasPrevistaVI, Cliente, SysDetalhesTarefasVi,Horas_Reprovadas, Prioridade, Funcionario, Projeto, Cliente, EmpresaInfo,SysGraficosHorasVi,SysEquipeVi, Cargo
 from login.models import LoginAuditoria
 from django.http import JsonResponse, HttpResponse
 from django.contrib import messages
+from django.utils.crypto import get_random_string
+from django.db.models import Q
 
 
 @login_required()
@@ -42,11 +43,12 @@ def sair(request):
     logout(request)
     return redirect('/auth/login')
 
-@login_required
+@login_required(login_url='/auth/login')
 def renderizar_cadastro(request):
     return render(request, 'projeto.html')
 
-@login_required
+
+@login_required(login_url='/auth/login')
 def cadastro_projeto(request):
     nome_projeto = request.POST.get('nome_projeto')
 
@@ -59,7 +61,7 @@ def cadastro_projeto(request):
     return 0 
 
 
-@login_required()
+@login_required(login_url='/auth/login')
 def selecionar_empresa(request):
     emp_cod = request.POST.get('emp_cod')
     emp_cargo = request.POST.get('cargo_nome')
@@ -82,7 +84,7 @@ def selecionar_empresa(request):
     return redirect('/plataforma/home')
 
 
-@login_required
+@login_required(login_url='/auth/login')
 def renderizar_plataforma(request):
     empresa_codigo = request.session.get('emp_cod')
     pes_cod_id = request.user.PES_COD
@@ -116,7 +118,7 @@ def renderizar_plataforma(request):
 
 
 
-@login_required
+@login_required(login_url='/auth/login')
 def iniciar_tarefa(request):
     trf_cod  = request.POST.get('trf_cod')
     pes_cod = request.user.PES_COD
@@ -158,8 +160,7 @@ def iniciar_tarefa(request):
         
     return JsonResponse({'status': 'OK', 'Msg': 'Iniciado com Sucesso'}, status=202)
 
-
-@login_required
+@login_required(login_url='/auth/login')
 def enviar_banco_horas(request):
     if request.method != 'POST':
         return JsonResponse({'status': 'error', 'message': 'Método não permitido.'}, status=405)
@@ -198,7 +199,7 @@ def enviar_banco_horas(request):
     
     
     
-@login_required
+@login_required(login_url='/auth/login/')
 def atualizar_registro_reprovada(request):
     trf_cod = request.POST.get('trf_cod')
     justificativa =  request.POST.get('justificativa')
@@ -220,7 +221,7 @@ def atualizar_registro_reprovada(request):
     else: 
         return JsonResponse({'status': 'ERROR', 'Msg': 'Não autorizado'}, status=401)    
          
-@login_required
+@login_required(login_url='/auth/login/')
 def atualizar_registro_aprovada(request):
     trf_cod = request.POST.get('trf_cod')
     pes_cod = request.user.PES_COD
@@ -241,7 +242,7 @@ def atualizar_registro_aprovada(request):
         return JsonResponse({'status': 'ERROR', 'Msg': 'Não autorizado'}, status=401)    
 
 
-@login_required
+@login_required(login_url='/auth/login/')
 def renderizar_cadastro(request):
     cargo = request.session.get('cargo')
     usuario = request.user
@@ -270,6 +271,7 @@ def renderizar_cadastro(request):
     })
     
     
+@login_required(login_url='/auth/login/')
 def projetos_clientes(request):
     cliente_cod = request.GET.get('cliente_cod')
     
@@ -282,12 +284,19 @@ def projetos_clientes(request):
         return JsonResponse({'error': 'Cliente não especificado'}, status=400)
     
     
-@login_required
+@login_required(login_url='/auth/login/')
 def exibir_grafico(request):
     trf_cod = request.GET.get('tarefa')
     pes_cod = request.user.PES_COD
     
-    dados_instancia = SysGraficosHorasVi.objects.filter(TRF_COD_id = trf_cod, PES_COD_id = pes_cod)
+    dados_instancia = SysGraficosHorasVi.objects.filter(TRF_COD_id = trf_cod, PES_COD_id = pes_cod, HRF_STATUS = 'A')
+    
+    if not dados_instancia:
+        tarefa = Tarefas.objects.filter(TRF_COD  = trf_cod).first()
+        tarefa.TRF_STATUS = 'F' # De finalizada
+        tarefa.save()
+        return redirect('/plataforma/home')
+    
     
     retorno = {
         "dados": dados_instancia
@@ -295,8 +304,24 @@ def exibir_grafico(request):
     
     return render(request,'analisar.html', retorno)
     
+@login_required(login_url='/auth/login/')
+def dados_graficos(request): 
+    tarefa_codigo = request.GET.get('tarefa')
     
-@login_required
+    faturas = FaturasPrevistaVI.objects.filter(TRF_COD_id=tarefa_codigo)
+    
+    faturas_list = list(faturas.values())
+    
+    retorno = {
+        "retorno": faturas_list
+    }
+    
+    return JsonResponse(retorno, status=202)
+    
+    
+    
+
+@login_required(login_url='/auth/login/')
 def cadastrar_tarefa(request):
     
     print(request.POST)
@@ -328,7 +353,7 @@ def cadastrar_tarefa(request):
     
     
     
-@login_required    
+@login_required(login_url='/auth/login/') 
 def novo_projeto(request):
     emp_cod = request.session.get('emp_cod'); 
     
@@ -345,7 +370,7 @@ def novo_projeto(request):
     return render (request, 'novo_projeto.html', retorno)
 
 
-@login_required
+@login_required(login_url='/auth/login/')
 def cadastrar_informacoes(request):
     tamanho = request.POST.get('tamanho')
     nome_cliente = request.POST.get('nome_cliente')
@@ -383,7 +408,7 @@ def cadastrar_informacoes(request):
     
     
 
-@login_required
+@login_required(login_url='/auth/login/')
 def criar_cliente(request):
     nome_cliente = request.POST.get('nome_cliente')
     emp_cod = request.session.get('emp_cod')
@@ -403,7 +428,7 @@ def criar_cliente(request):
     
 
 
-@login_required
+@login_required(login_url='/auth/login/')
 def editar_usuario(request):
     pes_cod = request.user.PES_COD
     pessoa = Pessoa.objects.filter(PES_COD=pes_cod).first()
@@ -436,7 +461,7 @@ def editar_usuario(request):
     return redirect('login')
 
     
-@login_required    
+@login_required(login_url='/auth/login/')
 def salvar_perfil(request):
     
     pes_cod = request.user.PES_COD
@@ -464,13 +489,12 @@ def salvar_perfil(request):
         
         return redirect('login')
 
-@login_required
+@login_required(login_url='/auth/login/')
 def criar_projeto(request):
     cliente = request.POST.get('cliente')
     nome_projeto = request.POST.get('nome_projeto')     
     valor_hora = request.POST.get('valor_hora')
     notas = request.POST.get('notas')
-    print(request.POST)
     if not cliente or not nome_projeto or not valor_hora:
             print("Erro: Todos os campos obrigatórios devem ser preenchidos!")
             return redirect('/plataforma/novo_projeto/')
@@ -490,10 +514,9 @@ def criar_projeto(request):
         return redirect('/plataforma/novo_projeto/')
 
 
-@login_required
+@login_required(login_url='/auth/login/')
 def listar_projeto(request):
     
-    # Agrupar os projetos por cliente
     projetos_com_clientes = Projeto.objects.select_related('CLI_COD').values('CLI_COD__CLI_NOME').distinct()
     projetos_por_cliente = {}
 
@@ -507,20 +530,233 @@ def listar_projeto(request):
 
     return render(request, 'projeto.html', retorno)
 
-
+@login_required(login_url='/auth/login/')
 def renderizar_equipe(request):
 
     emp_cod = request.session.get('emp_cod')
 
     equipe = SysEquipeVi.objects.filter(emp_cod_id = emp_cod)
     
+    print('Equipe -> ', equipe.exists() )
+    
     retorno = {
        "equipe": equipe,
        "existe":  equipe.exists()     
     }
-    
-
     return render(request, 'equipe.html', retorno)
 
+@login_required(login_url='/auth/login/')
 def cadastrar_funcionario(request):
-    return render(request, 'funcionario_novo.html')
+    
+    emp_cod = request.session.get('emp_cod')
+    cargos = Cargo.objects.filter(EMP_COD=emp_cod) | Cargo.objects.filter(EMP_COD__isnull=True)
+    retorno = {
+        "cargos": cargos
+    }
+    return render(request, 'funcionario_novo.html', retorno)
+
+@login_required(login_url='/auth/login/')
+def criar_cargo(request):
+    emp_cod = request.session.get('emp_cod')
+    if request.method == 'POST':
+        nome_cliente = request.POST.get('nome_cliente')
+        if nome_cliente:
+            empresa_instancia = Empresa.objects.filter(EMP_COD = emp_cod).first()
+            novo_cargo = Cargo(CARGO_NOME=nome_cliente, EMP_COD=empresa_instancia)
+            novo_cargo.save()
+            messages.success(request, 'Cliente adicionado com sucesso!')
+            return redirect('/plataforma/cadastrar_funcionario')  
+        else:
+            messages.error(request, 'Por favor, forneça o nome do Cargo.')
+    # Pedro ajeitar essse django message
+    return redirect('/plataforma/cadastrar_funcionario')  
+
+@login_required(login_url='/auth/login/')
+def criar_funcionario(request):
+    if request.method == 'POST':
+        primeiro_nome = request.POST.get('primeiro_nome')
+        sobrenome = request.POST.get('sobrenome')
+        tipo_usuario = request.POST.get('tipo_usuario')
+        cargo = request.POST.get('cargo')
+        capacidade = request.POST.get('capacidade')
+        valor_hora = request.POST.get('valor_hora')
+        email = request.POST.get('email')
+        emp_cod = request.session.get('emp_cod')
+
+        pessoa_existe = Pessoa.objects.filter(PES_EMAIL=email).first()
+        
+        if pessoa_existe:
+            
+            funcionario_instancia = Funcionario.objects.filter(PES_COD = pessoa_existe.PES_COD)
+        
+            if funcionario_instancia:
+                print('Funcionario ja existe!')
+                # PEDRO COLOCAR AQ TBM
+                return redirect('/plataforma/cadastrar_funcionario') 
+            
+            empresa_instacnia = Empresa.objects.filter(EMP_COD=emp_cod).first()
+            cargo_instacnia = Cargo.objects.filter(CARGO_COD=cargo).first()
+            
+            token_aprovacao = get_random_string(32)
+
+
+            novo_funcionario = Funcionario(
+                PES_COD=pessoa_existe,
+                EMP_COD=empresa_instacnia,
+                FUN_ROLES=cargo_instacnia,
+                FUN_MAXIMO_HORAS=capacidade,
+                FUN_VALOR_HORA=valor_hora,
+                FUN_APROVADO='N',
+                FUN_TOKEN=token_aprovacao,
+                FUN_TIPO = tipo_usuario
+            )
+            novo_funcionario.save()
+
+           
+            return redirect('/plataforma/equipe')  
+        
+        else:
+            pes_token = get_random_string(32)
+
+            nova_pessoa = Pessoa(
+                PES_NOME=primeiro_nome,
+                PES_SOBRENOME = sobrenome,
+                PES_EMAIL=email,
+                PES_TOKEN = pes_token,
+                PES_CADASTRO_COMPLETO = 'N'
+            )
+            nova_pessoa.save()
+
+            empresa_instacnia = Empresa.objects.filter(EMP_COD=emp_cod).first()
+            cargo_instacnia = Cargo.objects.filter(CARGO_COD=cargo).first()
+
+            token_aprovacao = get_random_string(32)
+
+            novo_funcionario = Funcionario(
+                PES_COD=nova_pessoa,
+                EMP_COD=empresa_instacnia,
+                FUN_ROLES=cargo_instacnia,
+                FUN_MAXIMO_HORAS=capacidade,
+                FUN_VALOR_HORA=valor_hora,
+                FUN_APROVADO='N',
+                FUN_TOKEN=token_aprovacao,
+                FUN_TIPO = tipo_usuario
+            )
+            novo_funcionario.save()
+        return redirect('/plataforma/equipe')  
+
+
+
+    
+
+
+@login_required(login_url='/auth/login/')
+def obter_funcionario(request):
+    fun_cod = request.GET.get('fun_cod')
+    emp_cod = request.session.get('emp_cod')
+    funcionario_instancia = Funcionario.objects.filter(FUN_COD=fun_cod).select_related('PES_COD', 'FUN_ROLES')
+
+    if funcionario_instancia.exists():
+        funcionario = funcionario_instancia.first()
+        
+        cargos = Cargo.objects.filter(
+            Q(EMP_COD=emp_cod) | Q(EMP_COD__isnull=True)
+        ).exclude(CARGO_NOME='Administrador').values('CARGO_COD', 'CARGO_NOME')
+
+        
+        response_data = {
+            'fun_cod': funcionario.FUN_COD,
+            'nome': funcionario.PES_COD.PES_NOME,
+            'email': funcionario.PES_COD.PES_EMAIL,  
+            'cargo': funcionario.FUN_ROLES.CARGO_NOME,
+            'cargo_cod': funcionario.FUN_ROLES.CARGO_COD,
+            'admin': funcionario.FUN_TIPO,
+            'vlr_hora': funcionario.FUN_VALOR_HORA,
+            'vlr_maximo': funcionario.FUN_MAXIMO_HORAS,
+            'cargos': list(cargos)
+        }
+
+        return JsonResponse(response_data, safe=False)
+    else:
+        return JsonResponse({'mensagem': 'Funcionário não encontrado'}, status=404)
+    
+    
+@login_required(login_url='/auth/login/')
+def editar_funcionario(request):
+
+        admin = request.POST.get('admin_checkbox');
+        cargo_id = request.POST.get('cargo')
+        valor_hora = request.POST.get('vlr_hora')
+        valor_maximo_horas = request.POST.get('vlr_maximo')
+        fun_cod = request.POST.get('fun_cod')
+        funcionario = Funcionario.objects.get(FUN_COD=fun_cod)
+
+        if not admin:
+            admin = 'F'
+        else:
+            admin = 'A'
+             
+        print(request.POST)
+        
+        cargo_instancia = Cargo.objects.filter(CARGO_COD = cargo_id).first()
+        
+        funcionario.FUN_TIPO = admin
+        funcionario.FUN_ROLES = cargo_instancia 
+        funcionario.FUN_VALOR_HORA = valor_hora
+        funcionario.FUN_MAXIMO_HORAS = valor_maximo_horas
+        funcionario.save()
+        return redirect('/plataforma/equipe/')  
+
+
+@login_required(login_url='/auth/login/')
+def aprovar_hora(request):
+    if request.method == 'POST':
+        try:
+            tarefa_codigo = request.POST.get('tarefa_id')
+            id = request.POST.get('hora_id')
+            
+            hr_trablhada = Horas_Trabalhadas.objects.filter(HRT_COD = id).first()
+
+
+            hr_trablhada.HRF_STATUS = 'AR' 
+            hr_trablhada.save()
+            tarefa = Tarefas.objects.filter(TRF_COD = tarefa_codigo).first()
+
+            hoje = datetime.datetime.now()
+            Horas_Aprovadas(TRF_COD=tarefa, HRA_DT_ULTIMA=hoje)
+
+            return JsonResponse({'message': 'Hora aprovada com sucesso!'}, status=200)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+        
+        
+        
+@login_required(login_url='/auth/login/')
+def reprovar_hora(request):
+    if request.method == 'POST':
+        try:
+            tarefa_codigo = request.POST.get('tarefa_id')
+            id = request.POST.get('hora_id')
+            print('id -> ', id)
+            hr_trablhada = Horas_Trabalhadas.objects.filter(HRT_COD = id).first()
+            
+            if not hr_trablhada:
+                return JsonResponse({'error': 'horas é necessária'}, status=400)
+
+            
+            
+            hr_trablhada.HRF_STATUS = 'R' 
+            hr_trablhada.save()
+            print(tarefa_codigo)
+            tarefa = Tarefas.objects.filter(TRF_COD = tarefa_codigo).first()
+            
+            justificativa = request.POST.get('justificativa')
+            if not justificativa:
+                return JsonResponse({'error': 'Justificativa é necessária'}, status=400)
+            hoje = datetime.datetime.now()
+            horas_reprovadas = Horas_Reprovadas(TRF_COD=tarefa, HRR_DT_ULTIMA=hoje, HRR_JUSTIFICATIVA=justificativa)
+            horas_reprovadas.save()
+            return JsonResponse({'message': 'Justificativa enviada com sucesso!'}, status=200)
+        except Exception as e:
+            print(e)
+            return JsonResponse({'error': str(e)}, status=400)

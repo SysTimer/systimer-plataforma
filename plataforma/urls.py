@@ -25,5 +25,12 @@ urlpatterns = [
     path('equipe/', views.renderizar_equipe, name='equipe'),
     path('cadastrar_funcionario/', views.cadastrar_funcionario, name='cadastrar_funcionario'),
     path('get-projetos/', views.projetos_clientes, name='get_projetos'),
+    path('criar_cargo/', views.criar_cargo, name='criar_cargo'),
+    path('criar_funcionario/', views.criar_funcionario, name='criar_funcionario'),
+    path('obter_funcionario/', views.obter_funcionario, name='obter_funcionario'),
+    path('editar_funcionario/', views.editar_funcionario, name='editar_funcionario'),
+    path('dados_graficos/', views.dados_graficos, name='dados_graficos'),
+    path('aprovar_hora/', views.aprovar_hora, name='aprovar_hora'),
+    path('reprovar_hora/', views.reprovar_hora, name='reprovar_hora'),
 
 ]

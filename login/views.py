@@ -11,6 +11,7 @@ from plataforma.models import Funcionario, Cargo
 from django.http import HttpResponse
 from django.utils import timezone
 from datetime import datetime, timedelta
+from django.shortcuts import render, get_object_or_404
 
 User = get_user_model()
 
@@ -146,6 +147,104 @@ def recuperar_acesso(request):
         pessoa_token.save()
         messages.add_message(request, constants.SUCCESS, 'Verifique sua caixa de entrada no e-mail')
         return redirect('/auth/login')
-        
-        
     return redirect('/auth/login')
+
+def update_view(request):
+    email = request.GET.get('email')
+    token = request.GET.get('token')
+    
+    # Pedro colocar messages no if e adicioanr try catch
+
+    if not email or not token:
+        return render(request, 'error.html', {'message': 'Email ou token não fornecido.'})
+
+    pessoa = get_object_or_404(Pessoa, PES_EMAIL=email)
+
+    if pessoa.PES_TOKEN != token: 
+        return render(request, 'error.html', {'message': 'Token inválido.'})
+
+    if pessoa.PES_CADASTRO_COMPLETO == 'N':
+        funcionario_instancia = Funcionario.objects.select_related('EMP_COD').filter(PES_COD=pessoa).first()
+        nome_empresa = funcionario_instancia.EMP_COD.EMP_NOME
+        
+        retorno = {
+            "pessoa": pessoa,
+            "nome_empresa": nome_empresa,
+            'email': email,
+            'token': token,
+        }
+
+        return render(request, 'confirmar_conta.html', retorno)
+    else:
+        return redirect('/auth/login/')
+    
+def update_view_funcionario(request):
+    email = request.GET.get('email')
+    token = request.GET.get('token')
+    
+    print('Email -> ', email)
+
+    # Pedro colocar messages no if e adicioanr try catch
+
+    if not email or not token:
+        return render(request, 'error.html', {'message': 'Email ou token não fornecido.'})
+
+    pessoa = get_object_or_404(Pessoa, PES_EMAIL=email)
+    funcionario = get_object_or_404(Funcionario, FUN_TOKEN = token, PES_COD = pessoa.PES_COD)
+    
+
+
+    if funcionario.FUN_TOKEN != token: 
+        return render(request, 'error.html', {'message': 'Token inválido.'})
+
+    if funcionario.FUN_APROVADO == 'N':
+        nome_empresa = funcionario.EMP_COD.EMP_NOME
+        
+        retorno = {
+            "pessoa": pessoa,
+            "nome_empresa": nome_empresa,
+            'email': email,
+            'token': token,
+        }
+
+        return render(request, 'confirmar_conta _funcionario.html', retorno)
+    else:
+        return redirect('/auth/login/')
+
+
+def update_password(request):
+    email = request.POST.get('email')
+    token = request.POST.get('token')
+    nova_senha = request.POST.get('nova_senha')
+    pessoa = get_object_or_404(Pessoa, PES_EMAIL=email, PES_TOKEN = token)
+    if not pessoa:
+        # pedro colocar msg dizenod que n foi encontrado a pessoa
+        return redirect('/auth/login/')
+    
+    funcionario_instancia = Funcionario.objects.filter(PES_COD = pessoa.PES_COD).first()
+
+    funcionario_instancia.FUN_APROVADO = 'S'
+    pessoa.password = nova_senha
+    pessoa.PES_CADASTRO_COMPLETO = 'S'
+    pessoa.save()
+    funcionario_instancia.save();
+    return redirect('/auth/login/')
+
+
+
+def update_funcionario(request):
+    
+    email = request.POST.get('email')
+    token = request.POST.get('token')
+    
+    pessoa = get_object_or_404(Pessoa, PES_EMAIL=email)
+    funcionario = get_object_or_404(Funcionario, PES_COD = pessoa.PES_COD, FUN_TOKEN = token)
+    print('Funcionario -> ', funcionario)
+    if not funcionario:
+        # pedro colocar msg dizenod que n foi encontrado a pessoa
+        return redirect('/auth/login/')
+    funcionario.FUN_APROVADO = 'S'
+    funcionario.save();
+    # Quando for sucesso, redirecione para o login com mensagem dizendo que ele foi aprovado com sucesso e precisa faazer
+    # Login para continuar 
+    return redirect('/auth/login/')

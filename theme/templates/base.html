@@ -77,7 +77,7 @@
                   <span class="ms-3 text-[13px] text-text-principal">Projetos</span>
                 </a>
 
-                <a href="#"
+                <a href="{% url 'equipe' %}"
                   class="flex items-center p-2 rounded-lg text-white hover:bg-white hover:border hover:border-slate-200 hover:border-[2px] group">
                   <i class="fa-solid fa-user-plus text-[13px] font-bold text-slate-400 group-hover:text-blue-600"></i>
                   <span class="ms-3 text-[13px] text-text-principal">Equipe</span>
@@ -188,8 +188,7 @@
                     <div id="menu"
                       class="hidden absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
                       role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-                      <!-- Active: "bg-gray-100 outline-none", Not Active: "" -->
-                      <a href="#" class="block px-4 py-2 text-[13px] text-gray-700" role="menuitem" tabindex="-1"
+                      <a href="{% url 'editar_usuario' %}" class="block px-4 py-2 text-[13px] text-gray-700" role="menuitem" tabindex="-1"
                         id="user-menu-item-0">Meu Perfil</a>
                       <a href="#" class="block px-4 py-2 text-[13px] text-gray-700" role="menuitem" tabindex="-1"
                         id="user-menu-item-1">Configurações</a>

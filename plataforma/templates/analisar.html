@@ -33,44 +33,56 @@
 
     <div class="p-5 grid gap-6 mb-6">
     
-        <div class="bg-red-300">
 
-            <h1>Cards</h1>
-
-        </div>
      
     
-   <div class="flex">
-
-    <div class="w-[50%]">       
-        <ol class="relative border-s border-gray-200 dark:border-gray-700">                  
-            {% for item in dados %}
-
-            <li class="mb-10 ms-6">            
-                <span class="absolute flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full -start-3 ring-8 ring-white dark:ring-gray-900 dark:bg-blue-900">
-                    <svg class="w-2.5 h-2.5 text-blue-800 dark:text-blue-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
-                    </svg>
-                </span>
-
-
-
-                <h3 class="flex items-center mb-1 text-lg font-semibold text-gray-900 dark:text-white">{{item.trf_titulo}}
-                    {% if forloop.first %}
-                    <span class="bg-blue-100 text-blue-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300 ms-3">Mais recente                    </span>
-                    {% endif %}                </h3>
-                <p class="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">Iniciada: {{item.data_inicio}} <br><br> Total Trabalhado: {{item.total_trabalhado|time:"H:i:s"}}</p>
-        
-            </li>
-
-            {% endfor%}
-        </ol>
-        
-        
-                
-            </div>
-
-            <div class="bg-pink-300">
+   <div class="flex ">
+    <div class="w-[60%] mr-10 p-5 overflow-y-scroll scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-200" >       
+      <ol class="relative border-s border-gray-200 dark:border-gray-700">                  
+          {% for item in dados %}
+          <li class="mb-10 ms-6">            
+              <span class="absolute flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full -start-3 ring-8 ring-white dark:ring-gray-900 dark:bg-blue-900">
+                  <svg class="w-2.5 h-2.5 text-blue-800 dark:text-blue-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+                  </svg>
+              </span>
+  
+              <h3 class="flex items-center mb-1 text-lg font-semibold text-gray-900 dark:text-white">{{item.trf_titulo}}
+                  {% if forloop.first %}
+                  <span class="bg-blue-100 text-blue-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300 ms-3">Mais recente</span>
+                  {% endif %}                
+              </h3>
+              <p class="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">Iniciada: {{item.data_inicio}} <br><br> Total Trabalhado: {{item.total_trabalhado|time:"H:i:s"}}</p>
+  
+              <div class="flex space-x-4">
+                  <button 
+                      class="p-2 bg-green-400 text-white rounded hover:bg-green-600"
+                      onclick="aprovarHora({{ item.HRT_COD }})">
+                      Aprovar
+                  </button>
+                  <button 
+                      class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                      onclick="mostrarJustificativa({{ item.HRT_COD }})">
+                      Reprovar
+                  </button>
+              </div>
+  
+              <!-- Input de justificativa escondido inicialmente -->
+              <div id="justificativa-{{ item.HRT_COD }}" class="mt-4 hidden">
+                  <label for="justificativa" class="block text-sm font-medium text-gray-700">Justificativa</label>
+                  <textarea 
+                      id="justificativa" 
+                      class="w-full border-gray-300 rounded-md shadow-sm mt-1"
+                      placeholder="Insira a justificativa para a reprovação"></textarea>
+                  <button class="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" onclick="enviarJustificativa({{ item.HRT_COD }})">
+                      Enviar
+                  </button>
+              </div>
+          </li>
+          {% endfor %}
+      </ol>
+  </div>
+            <div class="">
 
                 <div class="max-w-sm w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
   
@@ -105,23 +117,7 @@
                         </div>
                     </div>
                   
-                    <div>
-                      <div class="flex" id="devices">
-                        <div class="flex items-center me-4">
-                            <input id="desktop" type="checkbox" value="desktop" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                            <label for="desktop" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Desktop</label>
-                        </div>
-                        <div class="flex items-center me-4">
-                            <input id="tablet" type="checkbox" value="tablet" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                            <label for="tablet" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Tablet</label>
-                        </div>
-                        <div class="flex items-center me-4">
-                            <input id="mobile" type="checkbox" value="mobile" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                            <label for="mobile" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Mobile</label>
-                        </div>
-                      </div>
-                    </div>
-                  
+
                     <div class="py-6" id="donut-chart"></div>
                   
 
@@ -138,125 +134,197 @@
 
     </div>
 <script>
-    
-const getChartOptions = () => {
-    return {
-      series: [35.1, 23.5, 2.4, 5.4],
-      colors: ["#1C64F2", "#16BDCA", "#FDBA8C", "#E74694"],
-      chart: {
-        height: 320,
-        width: "100%",
-        type: "donut",
-      },
-      stroke: {
-        colors: ["transparent"],
-        lineCap: "",
-      },
-      plotOptions: {
-        pie: {
-          donut: {
-            labels: {
-              show: true,
-              name: {
+async function fetchDataAndRenderChart() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const tarefa = urlParams.get('tarefa');
+
+  if (!tarefa) {
+    console.error('Parâmetro tarefa não encontrado na URL');
+    return;
+  }
+
+  try {
+    const response = await fetch(`/plataforma/dados_graficos/?tarefa=${tarefa}`);
+    const data = await response.json();
+
+    if (data && data.retorno) {
+      const seriesData = data.retorno.map(item => parseFloat(item.ganho_total));
+
+      const chartOptions = {
+        series: seriesData,
+        colors: ["#1C64F2", "#16BDCA", "#FDBA8C", "#E74694"],
+        chart: {
+          height: 320,
+          width: "100%",
+          type: "donut",
+        },
+        stroke: {
+          colors: ["transparent"],
+          lineCap: "",
+        },
+        plotOptions: {
+          pie: {
+            donut: {
+              labels: {
                 show: true,
-                fontFamily: "Inter, sans-serif",
-                offsetY: 20,
-              },
-              total: {
-                showAlways: true,
-                show: true,
-                label: "Unique visitors",
-                fontFamily: "Inter, sans-serif",
-                formatter: function (w) {
-                  const sum = w.globals.seriesTotals.reduce((a, b) => {
-                    return a + b
-                  }, 0)
-                  return '$' + sum + 'k'
+                name: {
+                  show: true,
+                  fontFamily: "Inter, sans-serif",
+                  offsetY: 20,
+                },
+                total: {
+                  showAlways: true,
+                  show: true,
+                  label: "",
+                  fontFamily: "Inter, sans-serif",
+                  formatter: function (w) {
+                    const sum = w.globals.seriesTotals.reduce((a, b) => a + b, 0);
+                    return 'R$' + sum.toFixed(2);
+                  },
+                },
+                value: {
+                  show: true,
+                  fontFamily: "Inter, sans-serif",
+                  offsetY: -20,
+                  formatter: function (value) {
+                    return value.toFixed(2) + "k";
+                  },
                 },
               },
-              value: {
-                show: true,
-                fontFamily: "Inter, sans-serif",
-                offsetY: -20,
-                formatter: function (value) {
-                  return value + "k"
-                },
-              },
+              size: "80%",
             },
-            size: "80%",
           },
         },
-      },
-      grid: {
-        padding: {
-          top: -2,
-        },
-      },
-      labels: ["Direct", "Sponsor", "Affiliate", "Email marketing"],
-      dataLabels: {
-        enabled: false,
-      },
-      legend: {
-        position: "bottom",
-        fontFamily: "Inter, sans-serif",
-      },
-      yaxis: {
-        labels: {
-          formatter: function (value) {
-            return value + "k"
+        grid: {
+          padding: {
+            top: -2,
           },
         },
-      },
-      xaxis: {
-        labels: {
-          formatter: function (value) {
-            return value  + "k"
+        labels: data.retorno.map(item => item.data_trabalho),
+        dataLabels: {
+          enabled: false,
+        },
+        legend: {
+          position: "bottom",
+          fontFamily: "Inter, sans-serif",
+        },
+        yaxis: {
+          labels: {
+            formatter: function (value) {
+              return value.toFixed(2) + "k";
+            },
           },
         },
-        axisTicks: {
-          show: false,
+        xaxis: {
+          labels: {
+            formatter: function (value) {
+              return value + "k";
+            },
+          },
+          axisTicks: {
+            show: false,
+          },
+          axisBorder: {
+            show: false,
+          },
         },
-        axisBorder: {
-          show: false,
-        },
-      },
+      };
+
+      const chart = new ApexCharts(document.getElementById("donut-chart"), chartOptions);
+      chart.render();
+    } else {
+      console.error('No data available or invalid response');
     }
+  } catch (error) {
+    console.error('Error fetching data:', error);
   }
-  
-  if (document.getElementById("donut-chart") && typeof ApexCharts !== 'undefined') {
-    const chart = new ApexCharts(document.getElementById("donut-chart"), getChartOptions());
-    chart.render();
-  
-    const checkboxes = document.querySelectorAll('#devices input[type="checkbox"]');
-  
-    function handleCheckboxChange(event, chart) {
-        const checkbox = event.target;
-        if (checkbox.checked) {
-            switch(checkbox.value) {
-              case 'desktop':
-                chart.updateSeries([15.1, 22.5, 4.4, 8.4]);
-                break;
-              case 'tablet':
-                chart.updateSeries([25.1, 26.5, 1.4, 3.4]);
-                break;
-              case 'mobile':
-                chart.updateSeries([45.1, 27.5, 8.4, 2.4]);
-                break;
-              default:
-                chart.updateSeries([55.1, 28.5, 1.4, 5.4]);
-            }
-  
-        } else {
-            chart.updateSeries([35.1, 23.5, 2.4, 5.4]);
-        }
-    }
-  
-    // Attach the event listener to each checkbox
-    checkboxes.forEach((checkbox) => {
-        checkbox.addEventListener('change', (event) => handleCheckboxChange(event, chart));
-    });
+}
+
+fetchDataAndRenderChart();
+
+
+function aprovarHora(id) {
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const tarefa = urlParams.get('tarefa');
+
+  const formData = new FormData();
+  formData.append('tarefa_id', tarefa); 
+  formData.append('hora_id', id); 
+
+
+  fetch(`/plataforma/aprovar_hora/`, {
+  method: 'POST',
+  headers: {
+    'X-CSRFToken': getCookie('csrftoken') 
+  },
+  body: formData,
+})
+  .then(response => response.json())
+  .then(data => {
+    window.location.reload();
+  })
+  .catch(error => {
+      console.error('Erro:', error);
+      alert('Erro ao aprovar a hora');
+  });
+}
+
+function mostrarJustificativa(id) {
+  const justificativaElement = document.getElementById(`justificativa-${id}`);
+  justificativaElement.classList.toggle('hidden');
+}
+
+function enviarJustificativa(id) {
+  const justificativa = document.querySelector(`#justificativa-${id} textarea`).value;
+  if (!justificativa) {
+      alert('Por favor, insira a justificativa');
+      return;
   }
-  
+  const urlParams = new URLSearchParams(window.location.search);
+  const tarefa = urlParams.get('tarefa');
+
+  const formData = new FormData();
+  formData.append('tarefa_id', tarefa); 
+  formData.append('hora_id', id); 
+  formData.append('justificativa', justificativa);
+
+
+  fetch(`/plataforma/reprovar_hora/`, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': getCookie('csrftoken') 
+      },
+      body: formData,
+  })
+  .then(response => response.json())
+  .then(data => {
+    window.location.reload();
+  })
+  .catch(error => {
+      console.error('Erro:', error);
+      alert('Erro ao enviar a justificativa');
+  });
+}
+
+
+
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+          }
+      }
+  }
+  return cookieValue;
+}
+
+
 </script>
 </form>
 

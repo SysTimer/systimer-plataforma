@@ -1,93 +1,294 @@
-{% extends 'base.html' %}
-{% load static %}
-
-{% block titulo %}
+{% extends 'base.html' %} {% load static %} {% block titulo %}
 <title>SysTimer - Time</title>
-{% endblock %}
+{% endblock %} {% block conteudo %}
 
-{% block conteudo %}
-
- <div class="h-[80px] flex items-center justify-between w-full p-5">
-        <div class="flex items-center  w-full justify-between p-1rounded-xl">
-            <div>
-                <div>
-                    <span class="text-2xl font-semibold">
-                        Equipe
-                    </span>
-                </div>
-            </div>
-    
-            <div class="flex p-3 items-center">
-                <a href="{% url 'cadastrar_funcionario' %}"
-                    class="flex justify-centeri bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-user-plus"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /><path d="M16 19h6" /><path d="M19 16v6" /><path d="M6 21v-2a4 4 0 0 1 4 -4h4" /></svg>
-                    Convidar pessoa
-                </a>
-            </div>
-        </div>
+<div class="h-[80px] flex items-center justify-between w-full p-5">
+  <div class="flex items-center w-full justify-between p-1rounded-xl">
+    <div>
+      <div>
+        <span class="text-2xl font-semibold"> Equipe </span>
+      </div>
     </div>
-<hr>
+
+    <div class="flex p-3 items-center">
+      <a
+        href="{% url 'cadastrar_funcionario' %}"
+        class="flex justify-centeri bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="icon icon-tabler icons-tabler-outline icon-tabler-user-plus"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+          <path d="M16 19h6" />
+          <path d="M19 16v6" />
+          <path d="M6 21v-2a4 4 0 0 1 4 -4h4" />
+        </svg>
+        Convidar pessoa
+      </a>
+    </div>
+  </div>
+</div>
+<hr />
 
 <div class="p-10">
-    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+  <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+    {% if existe == True %} 
+    {% for pessoa in equipe %}
 
-        {% if existe == 'true' %}
-            {% for pessoa in equipe %}
+    <div
+      class="w-[300px] max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+    >
+      <div class="flex justify-end px-4 pt-4"> <!--- aqui abrte o drawn  teste -->
+        <button 
+        id="dropdownButton"
+        data-drawer-target="drawer-right-example"
+        data-drawer-show="drawer-right-example"
+        data-drawer-placement="right"
+        aria-controls="drawer-right-example"
+        data-user-id="{{ pessoa.fun_cod }}"
+        class="inline-block text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-1.5"
+        type="button"
+        onclick="openDrawer(this)"
+      >
+          <span class="sr-only">Open dropdown</span>
+          <svg
+            class="w-5 h-5"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 16 3"
+          >
+            <path
+              d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z"
+            />
+          </svg>
+        </button>
 
-            <div class="w-[300px] max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                <div class="flex justify-end px-4 pt-4">
-                    <button id="dropdownButton" data-dropdown-toggle="dropdown" class="inline-block text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-1.5" type="button">
-                        <span class="sr-only">Open dropdown</span>
-                        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 3">
-                            <path d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z"/>
-                        </svg>
-                    </button>
-                    <!-- Dropdown menu -->
-                    <div id="dropdown" class="z-10 hidden text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
-                        <ul class="py-2" aria-labelledby="dropdownButton">
-                        <li>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Editar</a>
-                        </li>
-                        <li>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Relatório</a>
-                        </li>
-                        <li>
-                            <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Deletar</a>
-                        </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="flex flex-col items-center pb-10">
-                    <img class="w-24 h-24 mb-3 rounded-full shadow-lg" src="/docs/images/people/profile-picture-3.jpg" alt="Bonnie image"/>
-                    <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">Bonnie Green</h5>
-                    <span class="text-sm text-gray-500 dark:text-gray-400">Visual Designer</span>
-                    <br>
-                    <span class="bg-blue-100 text-blue-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400">
-                        <svg class="w-2.5 h-2.5 me-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z"/>
-                        </svg>
-                        2 minutes ago
-                        </span>
-            
-                    <div class="flex mt-4 md:mt-6">
-                        <a href="#" class="py-2 px-4 ms-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Dashboard</a>
-                    </div>
-                </div>
-            </div>
-            
-
-            {% endfor %}
-        {% else %}
-        <div class="flex ">
-            <p class="text-center text-gray-600 text-xl font-semibold">Não há pessoas cadastradas</p>
+      </div>
+      <div class="flex flex-col items-center pb-10">
+        <div 
+        class="fotoPerfilEquipe w-24 h-24 mb-3 rounded-full shadow-lg flex items-center justify-center bg-gray-200 text-white">
+        {% if pessoa.pes_foto_url %}
+            <img class="w-24 h-24 mb-3 rounded-full shadow-lg" src="{{ pessoa.pes_foto_url }}" alt="Foto de {{ pessoa.nome }}" />
+            {% else %}
+                <span class="text-xl font-bold ">
+                    {{ pessoa.Inicial }}
+                </span>
+            {% endif %}
         </div>
-        
+    
 
-        {% endif %}
+        <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">
+          {{ pessoa.pes_nome}}
+        </h5>
+        <span class="text-sm text-gray-500 dark:text-gray-400"
+          >{{ pessoa.cargo_nome }}</span
+        >
 
+        <span class="text-sm text-gray-500 dark:text-gray-400"
+        >{{ pessoa.pes_email }}</span
+      >
+      <br />
+        <span
+          class="bg-blue-100 text-blue-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400"
+        >
+          <svg
+            class="w-2.5 h-2.5 me-1.5"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z"
+            />
+          </svg>
+          {% if pessoa.trabalho == 'false' %} Sem tarefa ativa {% else %}
+          Trabalhando Agora {% endif %}
+        </span>
 
+        <div class="flex mt-4 md:mt-6">
+          <a
+            href="#"
+            class="py-2 px-4 ms-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+            >Dashboard</a
+          >
+        </div>
+      </div>
     </div>
+
+    {% endfor %} {% else %}
+    <div class="flex">
+      <p class="text-center text-gray-600 text-xl font-semibold">
+        Não há pessoas cadastradas
+      </p>
+    </div>
+
+    {% endif %}
+  </div>
+<!-- Drawer component -->
+<div id="drawer-right-example" class="fixed top-0 right-0 z-40 h-screen p-4 overflow-y-auto transition-transform translate-x-full bg-white w-[500px] dark:bg-gray-800" tabindex="-1" aria-labelledby="drawer-right-label">
+  <h5 id="drawer-right-label" class="inline-flex items-center mb-4 text-base font-semibold text-gray-500 dark:text-gray-400">
+      <svg class="w-4 h-4 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+      </svg>Editar Funcionário
+  </h5>
+  <button type="button" data-drawer-hide="drawer-right-example" aria-controls="drawer-right-example" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 absolute top-2.5 end-2.5 inline-flex items-center justify-center dark:hover:bg-gray-600 dark:hover:text-white">
+      <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+      </svg>
+      <span class="sr-only">Close menu</span>
+  </button>
+
+  <form action="{% url 'editar_funcionario' %}" method="POST">
+    {% csrf_token %}
+      <div class="grid grid-cols-2 gap-4">
+          <div class="col-span-2">
+               <input type="text"  id="fun_cod" hidden name="fun_cod" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+              <label for="pes_nome" class="block text-sm font-medium text-gray-700">Nome</label>
+              <input type="text" id="pes_nome" name="pes_nome" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" disabled>
+          </div>
+
+          <div class="col-span-2">
+              <label for="pes_email" class="block text-sm font-medium text-gray-700">E-mail</label>
+              <input type="email" id="pes_email" name="pes_email" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" disabled>
+          </div>
+
+          <div class="col-span-2">
+              <input type="checkbox" id="admin_checkbox" name="admin_checkbox" class="ml-2" value="A">
+              <label for="admin_checkbox" class="inline-flex items-center text-sm font-medium text-gray-700">Administrador</label>
+
+          </div>
+
+          <div class="col-span-2">
+              <label for="cargo" class="block text-sm font-medium text-gray-700">Cargo</label>
+              <select name="cargo" id="cargo" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" >                 
+              </select>
+          </div>
+
+          <div class="col-span-2">
+            <label for="vlr_hora" class="block text-sm font-medium text-gray-700">Valor por Hora</label>
+      <input 
+          type="number" 
+          id="vlr_hora" name="vlr_hora"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          step="0.01" 
+          min="0" 
+      />
+  </div>
+
+  <div class="col-span-2">
+    <label for="vlr_maximo" class="block text-sm font-medium text-gray-700 mr-4">Máximo de Horas</label>
+      <button 
+          type="button" 
+          id="btn-decrease" 
+          class="px-2 py-1 border border-gray-300 rounded-md bg-gray-100 hover:bg-gray-200"
+      >-</button>
+      <input 
+          type="number" 
+          id="vlr_maximo" name="vlr_maximo"
+          class="mx-2 w-20 text-center border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          min="0" 
+      />
+      <button 
+          type="button" 
+          id="btn-increase" 
+          class="px-2 py-1 border border-gray-300 rounded-md bg-gray-100 hover:bg-gray-200"
+      >+</button>
+  </div>
+      </div>
+      
+      <div class="mt-4 flex justify-end">
+          <button type="submit" class="px-4 py-2 text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Salvar</button>
+      </div>
+  </form>
 </div>
 
+ 
+ 
+</div>
+
+<script>
+
+function gerarCorAleatoria() {
+        const caracteres = '0123456789ABCDEF';
+        let cor = '#';
+        for (let i = 0; i < 6; i++) {
+            cor += caracteres[Math.floor(Math.random() * 16)];
+        }
+        return cor;
+    }
+
+    document.querySelectorAll('.fotoPerfilEquipe').forEach(div => {
+        div.style.backgroundColor = gerarCorAleatoria();
+    });
+
+    function openDrawer(button) {
+      const userId = button.getAttribute('data-user-id');
+      const drawer = document.getElementById('drawer-right-example');
+  
+      fetch(`/plataforma/obter_funcionario/?fun_cod=${userId}`)
+          .then(response => response.json()) 
+          .then(data => {
+            const selectCargo = document.getElementById('cargo');
+            selectCargo.innerHTML = `<option value="">${data.cargo}</option>'`; 
+              document.getElementById('fun_cod').value = data.fun_cod;
+              document.getElementById('pes_nome').value = data.nome;
+              document.getElementById('pes_email').value = data.email;
+              document.getElementById('admin_checkbox').checked = (data.admin === 'A');
+
+              const vlrHora = parseFloat(data.vlr_hora) || 0;
+              const vlrMaximo = parseInt(data.vlr_maximo, 10) || 0; 
+  
+              document.getElementById('vlr_hora').value = vlrHora.toFixed(2);
+
+              document.getElementById('vlr_maximo').value = data.vlr_maximo;
+
+
+              data.cargos.forEach(cargo => {
+                const option = document.createElement('option');
+                option.value = cargo.CARGO_COD;
+                option.textContent = cargo.CARGO_NOME;
+                if (cargo.CARGO_COD === data.cargo) { 
+                    option.selected = true;
+                }
+                selectCargo.innerHTML = `<option value="${data.cargo_cod}">${data.cargo}</option>'`; 
+                selectCargo.value = cargo.CARGO_COD
+                selectCargo.appendChild(option);
+            });
+
+              drawer.classList.remove('translate-x-full');
+              drawer.classList.add('translate-x-0');
+          })
+          .catch(error => {
+              console.error('Erro ao carregar os detalhes do usuário:', error);
+          });
+  
+      document.getElementById('btn-increase').addEventListener('click', () => {
+          const maxInput = document.getElementById('vlr_maximo');
+          maxInput.value = parseInt(maxInput.value || 0, 10) + 1;
+      });
+  
+      document.getElementById('btn-decrease').addEventListener('click', () => {
+          const maxInput = document.getElementById('vlr_maximo');
+          const currentValue = parseInt(maxInput.value || 0, 10);
+          if (currentValue > 0) {
+              maxInput.value = currentValue - 1;
+          }
+      });
+  }
+  
+
+</script>
 
 {% endblock %}

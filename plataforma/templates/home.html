@@ -369,7 +369,6 @@
                             <th scope="col" class="px-4 py-3">Data Conclusão</th>
                             <th scope="col" class="px-4 py-3">Total Horas</th>
                             <th scope="col" class="px-4 py-3">Última atualização</th>
-                            <th scope="col" class="px-4 py-3">Ação</th>
                             <th scope="col" class="px-4 py-3">Analisar</th>
                             </tr>
                         </thead>
@@ -404,106 +403,7 @@
                                 <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     {{ tarefa_pendente.status }}
                                 </td>
-                                <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    <button id="verMais"
-                                        data-dropdown-toggle="tarefa_pendente-{{tarefa_pendente.trf_cod}}"
-                                        class="mr-10 inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
-                                        type="button">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round"
-                                            class="icon icon-tabler icons-tabler-outline icon-tabler-eye-plus">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                            <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
-                                            <path d="M12 18c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
-                                            <path d="M16 19h6" />
-                                            <path d="M19 16v6" />
-                                        </svg>
-                                    </button>
-                                    <div id="tarefa_pendente-{{tarefa_pendente.trf_cod}}"
-                                        class="dropMenu hidden absolute right-1 w-60 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
-                                        <ul class="py-1 text-sm text-gray-700 dark:text-gray-200">
-                                            <li>
-                                                <button type="button" onclick="aprovarTarefa({{tarefa_pendente.trf_cod}})" class="py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Aprovar</button>
-                                            </li>
-                                        </ul>
-                                        <div class="flex items-center py-1">
-                                            <button data-modal-target="crud-modal-{{tarefa_pendente.trf_cod}}"
-                                                data-modal-toggle="crud-modal-{{tarefa_pendente.trf_cod}}"
-                                                class="py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Reprovar</button>
-                                        </div>
-                                    </div>
 
-
-                                    <div id="crud-modal-{{tarefa_pendente.trf_cod}}" tabindex="-1" aria-hidden="true"
-                                        class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-                                        <div class="relative p-4 w-full max-w-md max-h-full">
-                                            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                                                <div
-                                                    class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                                                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                                                        Fechar Tarefa Pendente
-                                                    </h3>
-                                                    <button type="button"
-                                                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                                                        data-modal-toggle="crud-modal-{{tarefa_pendente.trf_cod}}">
-                                                        <svg class="w-3 h-3" aria-hidden="true"
-                                                            xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                            viewBox="0 0 14 14">
-                                                            <path stroke="currentColor" stroke-linecap="round"
-                                                                stroke-linejoin="round" stroke-width="2"
-                                                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                                                        </svg>
-                                                        <span class="sr-only">Close modal</span>
-                                                    </button>
-                                                </div>
-                                                <form class="p-4 md:p-5" method="POST"
-                                                    action="{% url 'atualizar_registro' %}">
-                                                    {% csrf_token %}
-                                                    <div class="grid gap-4 mb-4 grid-cols-2">
-                                                        <div class="col-span-2">
-                                                            <label for="name"
-                                                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nome</label>
-                                                            <input type="text" id="tarefa"
-                                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                                                placeholder="Type product name"
-                                                                value="{{tarefa_pendente.nome_tarefa}}" disabled>
-                                                        </div>
-
-                                                        <div class="hidden col-span-2">
-                                                            <input type="text" name="trf_cod" id="trf_cod"
-                                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                                                placeholder="Type product name"
-                                                                value="{{tarefa_pendente.trf_cod}}" >
-                                                        </div>
-
-                                                        <div class="col-span-2 mt-10">
-                                                            <label for="description"
-                                                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Justificativa
-                                                                (Obrigatório)
-                                                            </label>
-                                                            <textarea id="description" name="justificativa" rows="4"
-                                                                class="resize-none block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                                                placeholder="Digite a justificativa"></textarea>
-                                                        </div>
-                                                    </div>
-                                                    <button type="submit"
-                                                        class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                                                        <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor"
-                                                            viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                            <path fill-rule="evenodd"
-                                                                d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                                                                clip-rule="evenodd"></path>
-                                                        </svg>
-                                                        Atualizar Registro
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                </td>
                                 
                                 <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     <a href="{% url 'analisar' %}?tarefa={{ tarefa_pendente.trf_cod }}" id="analisar"><svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-chart-bar"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 13a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" /><path d="M15 9a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" /><path d="M9 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" /><path d="M4 20h14" /></svg></a>

@@ -16,7 +16,7 @@ class Cargo(models.Model):
     CARGO_COD = models.AutoField(primary_key=True)
     CARGO_NOME = models.CharField(max_length=60, unique=True)
     CARGO_DT_ATUALIZACAO = models.DateTimeField(default=timezone.now)
-    EMP_COD = models.ForeignKey(Empresa, on_delete=models.CASCADE)
+    EMP_COD = models.ForeignKey(Empresa, on_delete=models.CASCADE, null=True)
     class Meta:
         db_table = 'Cargo' 
 
@@ -28,7 +28,9 @@ class Funcionario(models.Model):
     FUN_ROLES = models.ForeignKey(Cargo, on_delete=models.DO_NOTHING)
     FUN_MAXIMO_HORAS = models.IntegerField(blank=True, null=True)
     FUN_VALOR_HORA = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-
+    FUN_APROVADO = models.CharField(max_length=1)
+    FUN_TOKEN = models.CharField(max_length=200)
+    FUN_TIPO = models.CharField(max_length=1)
     class Meta:
         db_table = 'Funcionario' 
 
@@ -89,6 +91,24 @@ class Horas_Reprovadas(models.Model):
     class Meta:
         db_table = 'Horas_Reprovadas' 
 
+class Horas_Aprovadas(models.Model):
+    HRA_COD = models.AutoField(primary_key=True)
+    HRA_DT_ULTIMA = models.DateTimeField(default=timezone.now)
+    TRF_COD = models.ForeignKey(Tarefas, on_delete=models.CASCADE)
+    class Meta:
+        db_table = 'Horas_Aprovadas' 
+        
+class Pessoa_Pre_cadastro(models.Model):
+    PPC_COD_PRE = models.AutoField(primary_key=True)
+    PPC_TOKEN = models.CharField(max_length=200)
+    PPC_ACCOUNT_ID = models.CharField(max_length=200)
+    PPC_TOKEN = models.CharField(max_length=200)
+    PPC_TOKEN = models.CharField(max_length=200)
+    PPC_TOKEN = models.CharField(max_length=200)
+    
+    class Meta:
+        db_table = 'Pessoa_Pre_cadastro' 
+    
 class EmpresaPessoaView(models.Model):
     pes_cod = models.IntegerField(primary_key=True) 
     pes_nome = models.CharField(max_length=150)
@@ -140,13 +160,14 @@ class SysDetalhesTarefasVi(models.Model):
         
         
 class SysGraficosHorasVi(models.Model):
+    HRT_COD = models.IntegerField()
     trf_titulo = models.CharField(max_length=255) 
     data_inicio = models.CharField(max_length=10)
     data_fim = models.CharField(max_length=10) 
     total_trabalhado = models.TimeField() 
     PES_COD_id = models.IntegerField()
     TRF_COD_id = models.IntegerField(primary_key=True)
-
+    HRF_STATUS = models.CharField(max_length=2) 
     class Meta:
         managed = False  
         db_table = 'SYS_GRAFICOS_HORAS_VI'
@@ -160,9 +181,23 @@ class SysEquipeVi(models.Model):
     trabalho = models.BooleanField()
     pes_foto_url = models.URLField(max_length=500, null=True, blank=True)
     pes_cod = models.BigIntegerField()
-    fun_cod = models.BigIntegerField()
+    fun_cod = models.BigIntegerField(primary_key=True)
     emp_cod_id = models.BigIntegerField()
+    Inicial = models.CharField(max_length=1)
 
     class Meta:
         managed = False 
         db_table = 'SYS_EQUIPE_VI'
+        
+        
+
+class FaturasPrevistaVI(models.Model):
+    data_trabalho = models.DateField(primary_key=True)
+    total_horas = models.DecimalField(max_digits=10, decimal_places=2)
+    ganho_total = models.DecimalField(max_digits=10, decimal_places=2)
+    pes_cod = models.BigIntegerField()
+    fun_cod = models.BigIntegerField()
+    TRF_COD_id = models.BigIntegerField()
+    class Meta:
+        managed = False  
+        db_table = 'SYS_FATURAS_PREVISTA_VI'

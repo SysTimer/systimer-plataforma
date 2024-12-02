@@ -1,0 +1,21 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Página de Erro</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.0/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="flex justify-center items-center min-h-screen bg-gray-100">
+  <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md text-center">
+    <div class="mb-4">
+      <img src="{% static 'img/error-icon.svg' %}" alt="Ícone de Erro" class="h-24 w-24 mx-auto text-red-500">
+    </div>
+    <h1 class="text-3xl font-bold text-red-500 mb-4">Ocorreu um Erro!</h1>
+    <p class="text-gray-700 mb-4">Desculpe, algo deu errado ao processar sua solicitação. Por favor, tente novamente mais tarde.</p>
+    <a href="{% url 'login' %}" class="inline-block bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">Voltar à Página Inicial</a>
+  </div>
+</body>
+</html>
