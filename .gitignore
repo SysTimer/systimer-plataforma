@@ -23,6 +23,7 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+node_modules/
 
 ### Python ###
 # Byte-compiled / optimized / DLL files

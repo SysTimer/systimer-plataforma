@@ -11,6 +11,7 @@ from django.db.models import Q
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 from reportlab.lib import colors
+from django.views.decorators.csrf import csrf_exempt
 
 @login_required()
 def response(request):
@@ -335,7 +336,7 @@ def cadastrar_tarefa(request):
     titulo = request.POST.get('titulo')
     observacao = request.POST.get('obs')
 
-     # Pedro - Adicionar Django Message!
+    
     if not cliente or not projeto:
         messages.error(request, 'Cliente ou projeto não pode ser vazio!')
     elif not funcionario:
@@ -382,7 +383,7 @@ def cadastrar_informacoes(request):
 
     
     if not tamanho or not nome_cliente or not nome_projeto:
-        # PEDRO FAZER AQUI TAMBÉM, E RETORNAR ERRO LA NO FORM
+        
         return HttpResponse('Teste')
     
     try:
@@ -402,7 +403,7 @@ def cadastrar_informacoes(request):
             empresa_instancia.save()
             return redirect('/plataforma/home/')
         else: 
-            # PEDRO FAZER AQUI TAMBÉM, E RETORNAR ERRO LA NO FORM
+            #
             return HttpResponse('Retornar o erro para usuário') 
     except Exception as e: 
         print(e)
@@ -428,9 +429,6 @@ def criar_cliente(request):
     elif '/plataforma/novo_projeto/' in referer_url:
         return redirect('/plataforma/novo_projeto/')
     
-
-
-@login_required(login_url='/auth/login/')
 def editar_usuario(request):
     pes_cod = request.user.PES_COD
     pessoa = Pessoa.objects.filter(PES_COD=pes_cod).first()
@@ -440,55 +438,84 @@ def editar_usuario(request):
             nome = request.POST.get('nome')
             sobrenome = request.POST.get('sobrenome')
             email = request.POST.get('email')
-            foto = request.FILES.get('foto')
+            foto = request.FILES.get('foto') 
             senha = request.POST.get('senha')
             cargo = request.POST.get('cargo')
+
+            if not nome or not sobrenome:
+                messages.error(request, "Todos os campos são obrigatórios!")
+                return render(request, 'editar_usuario.html', {'pessoa': pessoa})
 
             pessoa.PES_NOME = nome
             pessoa.PES_SOBRENOME = sobrenome
             pessoa.PES_EMAIL = email
 
             if foto:
-                pessoa.foto = foto
+                pessoa.PES_FOTO_REFERENCIA = foto 
+
             if senha:
                 pessoa.set_password(senha)
+
             pessoa.cargo = cargo
 
             pessoa.save()
 
-            return redirect('perfil_usuario')
+            messages.success(request, "Dados atualizados com sucesso!")
+            return redirect('editar_usuario')
 
         return render(request, 'editar_usuario.html', {'pessoa': pessoa})
 
     return redirect('login')
 
-    
-@login_required(login_url='/auth/login/')
+
+
+
+
+@csrf_exempt  
 def salvar_perfil(request):
-    
     pes_cod = request.user.PES_COD
-    
-    
     pessoa = Pessoa.objects.filter(PES_COD=pes_cod).first()
-    
+
     if pessoa:
-        
         if request.method == 'POST':
             novo_nome = request.POST.get('nome')
             novo_sobrenome = request.POST.get('sobrenome')
+            email = request.POST.get('email')
+            senha = request.POST.get('senha')
+            foto = request.FILES.get('foto')
+
+           
+            if not novo_nome or not novo_sobrenome:
+                messages.error(request, "Por favor, altere pelo menos o Nome ou o Sobrenome.")
+                return render(request, 'editar_usuario.html', {'pessoa': pessoa})
+
             
-            pessoa.nome = novo_nome
-            pessoa.sobrenome = novo_sobrenome
-        
+            if Pessoa.objects.exclude(PES_COD=request.user.PES_COD).filter(PES_EMAIL=email).exists():
+                messages.error(request, "Este e-mail já está em uso.")
+                return render(request, 'editar_usuario.html', {'pessoa': pessoa})
+
+           
+            pessoa.PES_NOME = novo_nome
+            pessoa.PES_SOBRENOME = novo_sobrenome
+            pessoa.PES_EMAIL = email
+
+            
+            if foto:
+                pessoa.PES_FOTO_REFERENCIA = foto
+
+            
+            if senha:
+                pessoa.set_password(senha)
+
             pessoa.save()
-            
-            
-            return redirect('perfil')  
+
+            messages.info(request, "Perfil atualizado com sucesso.")
+
+           
+            return redirect('editar_usuario')
         else:
-            
             return render(request, 'editar_usuario.html', {'pessoa': pessoa})
     else:
-        
         return redirect('login')
 
 @login_required(login_url='/auth/login/')
@@ -843,3 +870,26 @@ def gerar_relatorio_invoices(caminho='relatorio_invoices.pdf'):
     pdf.save()
 
     print(f"Relatório gerado com sucesso em {caminho}")
+    
+
+from django.shortcuts import render, get_object_or_404
+from .models import Tarefas
+
+@login_required
+def editar_tarefa(request):
+    
+    tarefa_id = request.GET.get('tarefa')
+
+    tarefa = Tarefas.objects.filter(TRF_COD=tarefa_id).first()
+
+    if tarefa:
+        retorno = {
+            "retorno": tarefa
+        }
+    else:
+        retorno = {
+            "retorno": None
+        }
+    
+    return render(request, 'editar_tarefa.html', retorno)
+        
